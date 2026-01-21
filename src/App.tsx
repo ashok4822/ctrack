@@ -26,8 +26,19 @@ import ActivitiesCharges from "./pages/terminal/admin/ActivitiesCharges";
 import ReportsAnalytics from "./pages/terminal/admin/ReportsAnalytics";
 import SystemConfiguration from "./pages/terminal/admin/SystemConfiguration";
 
-// Terminal Other Role Pages
+// Terminal Manager Pages
 import ManagerDashboard from "./pages/terminal/manager/ManagerDashboard";
+import ManagerContainerMonitoring from "./pages/terminal/manager/ContainerMonitoring";
+import ManagerYardMonitoring from "./pages/terminal/manager/YardMonitoring";
+import ManagerGateOperations from "./pages/terminal/manager/GateOperations";
+import ManagerApprovals from "./pages/terminal/manager/Approvals";
+import ManagerStuffingDestuffing from "./pages/terminal/manager/StuffingDestuffing";
+import ManagerVehiclesEquipment from "./pages/terminal/manager/VehiclesEquipment";
+import ManagerReports from "./pages/terminal/manager/Reports";
+import ManagerAuditView from "./pages/terminal/manager/AuditView";
+import ManagerProfile from "./pages/terminal/manager/Profile";
+
+// Terminal Other Role Pages
 import OperatorDashboard from "./pages/terminal/operator/OperatorDashboard";
 import SurveyorDashboard from "./pages/terminal/surveyor/SurveyorDashboard";
 
@@ -83,7 +94,15 @@ const App = () => (
 
             {/* Terminal Manager Routes */}
             <Route path="/terminal/manager/dashboard" element={<ManagerDashboard />} />
-            <Route path="/terminal/manager/*" element={<ManagerDashboard />} />
+            <Route path="/terminal/manager/containers" element={<ManagerContainerMonitoring />} />
+            <Route path="/terminal/manager/yard" element={<ManagerYardMonitoring />} />
+            <Route path="/terminal/manager/gate" element={<ManagerGateOperations />} />
+            <Route path="/terminal/manager/approvals" element={<ManagerApprovals />} />
+            <Route path="/terminal/manager/stuffing" element={<ManagerStuffingDestuffing />} />
+            <Route path="/terminal/manager/vehicles" element={<ManagerVehiclesEquipment />} />
+            <Route path="/terminal/manager/reports" element={<ManagerReports />} />
+            <Route path="/terminal/manager/audit" element={<ManagerAuditView />} />
+            <Route path="/terminal/manager/profile" element={<ManagerProfile />} />
 
             {/* Terminal Operator Routes */}
             <Route path="/terminal/operator/dashboard" element={<OperatorDashboard />} />
