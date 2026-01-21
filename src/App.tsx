@@ -31,8 +31,16 @@ import ManagerDashboard from "./pages/terminal/manager/ManagerDashboard";
 import OperatorDashboard from "./pages/terminal/operator/OperatorDashboard";
 import SurveyorDashboard from "./pages/terminal/surveyor/SurveyorDashboard";
 
-// External User Pages
+// External User Pages - Shipping Line
 import ShippingLineDashboard from "./pages/shipping-line/ShippingLineDashboard";
+import MyContainers from "./pages/shipping-line/MyContainers";
+import ContainerNomination from "./pages/shipping-line/ContainerNomination";
+import Movements from "./pages/shipping-line/Movements";
+import Bills from "./pages/shipping-line/Bills";
+import ShippingLineReports from "./pages/shipping-line/Reports";
+import ShippingLineProfile from "./pages/shipping-line/Profile";
+
+// External User Pages - Customer
 import CustomerDashboard from "./pages/customer/CustomerDashboard";
 
 import NotFound from "./pages/NotFound";
@@ -83,7 +91,12 @@ const App = () => (
             {/* Shipping Line Routes */}
             <Route path="/shipping-line/login" element={<ShippingLineLogin />} />
             <Route path="/shipping-line/dashboard" element={<ShippingLineDashboard />} />
-            <Route path="/shipping-line/*" element={<ShippingLineDashboard />} />
+            <Route path="/shipping-line/containers" element={<MyContainers />} />
+            <Route path="/shipping-line/nomination" element={<ContainerNomination />} />
+            <Route path="/shipping-line/movements" element={<Movements />} />
+            <Route path="/shipping-line/bills" element={<Bills />} />
+            <Route path="/shipping-line/reports" element={<ShippingLineReports />} />
+            <Route path="/shipping-line/profile" element={<ShippingLineProfile />} />
 
             {/* Customer Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
