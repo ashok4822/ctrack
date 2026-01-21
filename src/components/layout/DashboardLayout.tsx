@@ -37,12 +37,7 @@ export function DashboardLayout({
           onCollapsedChange={setSidebarCollapsed}
         />
         
-        <main
-          className={cn(
-            'flex-1 transition-all duration-300',
-            sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'
-          )}
-        >
+        <main className="flex-1 min-w-0">
           <div className="p-4 lg:p-6">
             {/* Breadcrumb */}
             <Breadcrumb className="mb-4" />
