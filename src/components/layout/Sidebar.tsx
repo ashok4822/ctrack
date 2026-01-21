@@ -130,7 +130,7 @@ export function Sidebar({
       <aside
         className={cn(
           'fixed left-0 top-14 z-50 h-[calc(100vh-3.5rem)] border-r bg-sidebar transition-all duration-300',
-          'lg:sticky lg:z-30',
+          'lg:sticky lg:top-14 lg:z-30 lg:shrink-0',
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
           collapsed ? 'w-16' : 'w-64'
         )}
