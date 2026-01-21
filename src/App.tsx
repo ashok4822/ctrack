@@ -20,6 +20,11 @@ import Approvals from "./pages/terminal/admin/Approvals";
 import VehiclesEquipment from "./pages/terminal/admin/VehiclesEquipment";
 import AuditLogs from "./pages/terminal/admin/AuditLogs";
 import UserManagement from "./pages/terminal/admin/UserManagement";
+import StuffingDestuffing from "./pages/terminal/admin/StuffingDestuffing";
+import SurveysDamage from "./pages/terminal/admin/SurveysDamage";
+import ActivitiesCharges from "./pages/terminal/admin/ActivitiesCharges";
+import ReportsAnalytics from "./pages/terminal/admin/ReportsAnalytics";
+import SystemConfiguration from "./pages/terminal/admin/SystemConfiguration";
 
 // Terminal Other Role Pages
 import ManagerDashboard from "./pages/terminal/manager/ManagerDashboard";
@@ -57,11 +62,11 @@ const App = () => (
             <Route path="/terminal/admin/vehicles" element={<VehiclesEquipment />} />
             <Route path="/terminal/admin/audit" element={<AuditLogs />} />
             <Route path="/terminal/admin/users" element={<UserManagement />} />
-            <Route path="/terminal/admin/stuffing" element={<AdminDashboard />} />
-            <Route path="/terminal/admin/surveys" element={<AdminDashboard />} />
-            <Route path="/terminal/admin/charges" element={<AdminDashboard />} />
-            <Route path="/terminal/admin/reports" element={<AdminDashboard />} />
-            <Route path="/terminal/admin/settings" element={<AdminDashboard />} />
+            <Route path="/terminal/admin/stuffing" element={<StuffingDestuffing />} />
+            <Route path="/terminal/admin/surveys" element={<SurveysDamage />} />
+            <Route path="/terminal/admin/charges" element={<ActivitiesCharges />} />
+            <Route path="/terminal/admin/reports" element={<ReportsAnalytics />} />
+            <Route path="/terminal/admin/settings" element={<SystemConfiguration />} />
 
             {/* Terminal Manager Routes */}
             <Route path="/terminal/manager/dashboard" element={<ManagerDashboard />} />
