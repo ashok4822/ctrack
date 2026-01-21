@@ -38,8 +38,19 @@ import ManagerReports from "./pages/terminal/manager/Reports";
 import ManagerAuditView from "./pages/terminal/manager/AuditView";
 import ManagerProfile from "./pages/terminal/manager/Profile";
 
-// Terminal Other Role Pages
+// Terminal Operator Pages
 import OperatorDashboard from "./pages/terminal/operator/OperatorDashboard";
+import OperatorGateOperations from "./pages/terminal/operator/GateOperations";
+import OperatorYardOperations from "./pages/terminal/operator/YardOperations";
+import OperatorStuffingDestuffing from "./pages/terminal/operator/StuffingDestuffing";
+import OperatorEquipmentVehicles from "./pages/terminal/operator/EquipmentVehicles";
+import OperatorContainerLookup from "./pages/terminal/operator/ContainerLookup";
+import OperatorTasks from "./pages/terminal/operator/Tasks";
+import OperatorBilling from "./pages/terminal/operator/Billing";
+import OperatorPDAView from "./pages/terminal/operator/PDAView";
+import OperatorProfile from "./pages/terminal/operator/Profile";
+
+// Terminal Surveyor Pages
 import SurveyorDashboard from "./pages/terminal/surveyor/SurveyorDashboard";
 
 // External User Pages - Shipping Line
@@ -106,7 +117,15 @@ const App = () => (
 
             {/* Terminal Operator Routes */}
             <Route path="/terminal/operator/dashboard" element={<OperatorDashboard />} />
-            <Route path="/terminal/operator/*" element={<OperatorDashboard />} />
+            <Route path="/terminal/operator/gate" element={<OperatorGateOperations />} />
+            <Route path="/terminal/operator/yard" element={<OperatorYardOperations />} />
+            <Route path="/terminal/operator/stuffing" element={<OperatorStuffingDestuffing />} />
+            <Route path="/terminal/operator/equipment" element={<OperatorEquipmentVehicles />} />
+            <Route path="/terminal/operator/lookup" element={<OperatorContainerLookup />} />
+            <Route path="/terminal/operator/tasks" element={<OperatorTasks />} />
+            <Route path="/terminal/operator/billing" element={<OperatorBilling />} />
+            <Route path="/terminal/operator/pda" element={<OperatorPDAView />} />
+            <Route path="/terminal/operator/profile" element={<OperatorProfile />} />
 
             {/* Terminal Surveyor Routes */}
             <Route path="/terminal/surveyor/dashboard" element={<SurveyorDashboard />} />
