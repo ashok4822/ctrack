@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DoorOpen,
   ArrowDownToLine,
@@ -27,12 +28,14 @@ import {
   Search,
   Clock,
 } from 'lucide-react';
-import { dummyGateOperations, dummyKPIData } from '@/data/dummyData';
+import { dummyGateOperations, dummyKPIData, dummyShippingLines } from '@/data/dummyData';
 import type { GateOperation } from '@/types';
 import { useState } from 'react';
 
 export default function OperatorGateOperations() {
   const [selectedOperation, setSelectedOperation] = useState<GateOperation | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasDamage, setHasDamage] = useState(false);
   
   const gateIns = dummyGateOperations.filter(op => op.type === 'gate-in');
   const gateOuts = dummyGateOperations.filter(op => op.type === 'gate-out');
@@ -173,18 +176,86 @@ export default function OperatorGateOperations() {
               <DialogTitle>New Gate-In</DialogTitle>
               <DialogDescription>Record a new container gate-in</DialogDescription>
             </DialogHeader>
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="container">Container Number</Label>
-                <Input id="container" placeholder="e.g., MSCU1234567" />
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="container">Container Number</Label>
+                  <Input id="container" placeholder="e.g., MSCU1234567" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="size">Container Size</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select size" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="20ft">20ft</SelectItem>
+                      <SelectItem value="40ft">40ft</SelectItem>
+                      <SelectItem value="45ft">45ft</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="vehicle">Vehicle Number</Label>
-                <Input id="vehicle" placeholder="e.g., TN01AB1234" />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="containerType">Container Type</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="standard">Standard</SelectItem>
+                      <SelectItem value="reefer">Reefer</SelectItem>
+                      <SelectItem value="tank">Tank</SelectItem>
+                      <SelectItem value="open-top">Open Top</SelectItem>
+                      <SelectItem value="flat-rack">Flat Rack</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="movementType">Movement Type</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select movement" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="import">Import</SelectItem>
+                      <SelectItem value="export">Export</SelectItem>
+                      <SelectItem value="domestic">Domestic</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="driver">Driver Name</Label>
-                <Input id="driver" placeholder="Enter driver name" />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="shippingLine">Shipping Line</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select shipping line" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {dummyShippingLines.map((line) => (
+                        <SelectItem key={line.id} value={line.id}>
+                          {line.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="tareWeight">Tare Weight (kg)</Label>
+                  <Input id="tareWeight" type="number" placeholder="e.g., 2200" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="vehicle">Vehicle Number</Label>
+                  <Input id="vehicle" placeholder="e.g., TN01AB1234" />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="driver">Driver Name</Label>
+                  <Input id="driver" placeholder="Enter driver name" />
+                </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="purpose">Purpose</Label>
@@ -199,6 +270,30 @@ export default function OperatorGateOperations() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center space-x-2 pt-6">
+                  <Checkbox 
+                    id="loaded" 
+                    checked={isLoaded}
+                    onCheckedChange={(checked) => setIsLoaded(checked === true)}
+                  />
+                  <Label htmlFor="loaded" className="cursor-pointer">Loaded Container</Label>
+                </div>
+                <div className="flex items-center space-x-2 pt-6">
+                  <Checkbox 
+                    id="damage" 
+                    checked={hasDamage}
+                    onCheckedChange={(checked) => setHasDamage(checked === true)}
+                  />
+                  <Label htmlFor="damage" className="cursor-pointer text-destructive">Has Damage</Label>
+                </div>
+              </div>
+              {isLoaded && (
+                <div className="space-y-2">
+                  <Label htmlFor="cargoWeight">Cargo Weight (kg)</Label>
+                  <Input id="cargoWeight" type="number" placeholder="e.g., 18000" />
+                </div>
+              )}
               <div className="space-y-2">
                 <Label htmlFor="seal">Seal Number</Label>
                 <Input id="seal" placeholder="Enter seal number" />
