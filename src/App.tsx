@@ -42,6 +42,11 @@ import ShippingLineProfile from "./pages/shipping-line/Profile";
 
 // External User Pages - Customer
 import CustomerDashboard from "./pages/customer/CustomerDashboard";
+import CustomerMyContainers from "./pages/customer/MyContainers";
+import CustomerStuffingDestuffing from "./pages/customer/StuffingDestuffing";
+import CustomerMovements from "./pages/customer/Movements";
+import CustomerRequests from "./pages/customer/Requests";
+import CustomerProfile from "./pages/customer/Profile";
 
 import NotFound from "./pages/NotFound";
 
@@ -101,7 +106,11 @@ const App = () => (
             {/* Customer Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/dashboard" element={<CustomerDashboard />} />
-            <Route path="/customer/*" element={<CustomerDashboard />} />
+            <Route path="/customer/containers" element={<CustomerMyContainers />} />
+            <Route path="/customer/stuffing" element={<CustomerStuffingDestuffing />} />
+            <Route path="/customer/movements" element={<CustomerMovements />} />
+            <Route path="/customer/requests" element={<CustomerRequests />} />
+            <Route path="/customer/profile" element={<CustomerProfile />} />
 
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
