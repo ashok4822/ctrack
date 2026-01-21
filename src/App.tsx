@@ -52,6 +52,11 @@ import OperatorProfile from "./pages/terminal/operator/Profile";
 
 // Terminal Surveyor Pages
 import SurveyorDashboard from "./pages/terminal/surveyor/SurveyorDashboard";
+import SurveyorAssignedSurveys from "./pages/terminal/surveyor/AssignedSurveys";
+import SurveyorDamageInspection from "./pages/terminal/surveyor/DamageInspection";
+import SurveyorReports from "./pages/terminal/surveyor/SurveyReports";
+import SurveyorHistory from "./pages/terminal/surveyor/History";
+import SurveyorProfile from "./pages/terminal/surveyor/Profile";
 
 // External User Pages - Shipping Line
 import ShippingLineDashboard from "./pages/shipping-line/ShippingLineDashboard";
@@ -129,7 +134,11 @@ const App = () => (
 
             {/* Terminal Surveyor Routes */}
             <Route path="/terminal/surveyor/dashboard" element={<SurveyorDashboard />} />
-            <Route path="/terminal/surveyor/*" element={<SurveyorDashboard />} />
+            <Route path="/terminal/surveyor/assigned" element={<SurveyorAssignedSurveys />} />
+            <Route path="/terminal/surveyor/inspection" element={<SurveyorDamageInspection />} />
+            <Route path="/terminal/surveyor/reports" element={<SurveyorReports />} />
+            <Route path="/terminal/surveyor/history" element={<SurveyorHistory />} />
+            <Route path="/terminal/surveyor/profile" element={<SurveyorProfile />} />
 
             {/* Shipping Line Routes */}
             <Route path="/shipping-line/login" element={<ShippingLineLogin />} />
