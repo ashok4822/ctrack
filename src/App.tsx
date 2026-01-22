@@ -64,6 +64,7 @@ import MyContainers from "./pages/shipping-line/MyContainers";
 import ContainerNomination from "./pages/shipping-line/ContainerNomination";
 import Movements from "./pages/shipping-line/Movements";
 import Bills from "./pages/shipping-line/Bills";
+import ShippingLinePayment from "./pages/shipping-line/Payment";
 import ShippingLineReports from "./pages/shipping-line/Reports";
 import ShippingLineProfile from "./pages/shipping-line/Profile";
 
@@ -147,6 +148,7 @@ const App = () => (
             <Route path="/shipping-line/nomination" element={<ContainerNomination />} />
             <Route path="/shipping-line/movements" element={<Movements />} />
             <Route path="/shipping-line/bills" element={<Bills />} />
+            <Route path="/shipping-line/payment" element={<ShippingLinePayment />} />
             <Route path="/shipping-line/reports" element={<ShippingLineReports />} />
             <Route path="/shipping-line/profile" element={<ShippingLineProfile />} />
 
