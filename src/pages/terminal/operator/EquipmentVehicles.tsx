@@ -31,18 +31,39 @@ import {
   Wrench,
   ClipboardList,
   RefreshCw,
+  LogIn,
+  LogOut,
 } from 'lucide-react';
-import { dummyVehicles, dummyEquipment } from '@/data/dummyData';
+import { dummyVehicles, dummyEquipment, dummyStuffingOperations } from '@/data/dummyData';
 import type { Vehicle, Equipment } from '@/types';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function OperatorEquipmentVehicles() {
   const { toast } = useToast();
+  const [vehicles, setVehicles] = useState(dummyVehicles);
   const [equipment, setEquipment] = useState(dummyEquipment);
   const [assignTaskOpen, setAssignTaskOpen] = useState(false);
   const [updateStatusOpen, setUpdateStatusOpen] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
+  
+  // Vehicle Gate In/Out state
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [gateInOpen, setGateInOpen] = useState(false);
+  const [gateOutOpen, setGateOutOpen] = useState(false);
+  const [gateInForm, setGateInForm] = useState({
+    operationType: '',
+    containerId: '',
+    purpose: 'stuffing',
+    remarks: '',
+  });
+  const [gateOutForm, setGateOutForm] = useState({
+    operationType: '',
+    containerId: '',
+    purpose: 'stuffing',
+    remarks: '',
+  });
+
   const [taskForm, setTaskForm] = useState({
     taskType: '',
     containerId: '',
@@ -56,9 +77,14 @@ export default function OperatorEquipmentVehicles() {
     notes: '',
   });
 
-  const activeVehicles = dummyVehicles.filter(v => v.status === 'active');
+  const activeVehicles = vehicles.filter(v => v.status === 'active');
   const activeEquipment = equipment.filter(e => e.status === 'operational');
   const maintenanceEquipment = equipment.filter(e => e.status === 'maintenance');
+
+  // Pending stuffing/destuffing operations at terminal
+  const pendingTerminalOps = dummyStuffingOperations.filter(
+    op => op.location === 'terminal' && (op.status === 'pending' || op.status === 'in-progress')
+  );
 
   const handleAssignTask = () => {
     if (!selectedEquipment || !taskForm.taskType || !taskForm.containerId) {
@@ -122,6 +148,65 @@ export default function OperatorEquipmentVehicles() {
     setUpdateStatusOpen(true);
   };
 
+  const openGateIn = (vehicle: Vehicle) => {
+    setSelectedVehicle(vehicle);
+    setGateInForm({ operationType: '', containerId: '', purpose: 'stuffing', remarks: '' });
+    setGateInOpen(true);
+  };
+
+  const openGateOut = (vehicle: Vehicle) => {
+    setSelectedVehicle(vehicle);
+    setGateOutForm({ operationType: '', containerId: '', purpose: 'stuffing', remarks: '' });
+    setGateOutOpen(true);
+  };
+
+  const handleVehicleGateIn = () => {
+    if (!selectedVehicle || !gateInForm.operationType || !gateInForm.containerId) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setVehicles(prev => prev.map(v => 
+      v.id === selectedVehicle.id 
+        ? { ...v, status: 'active' as const, currentLocation: 'Terminal - Stuffing Area' }
+        : v
+    ));
+
+    toast({
+      title: "Vehicle Gate-In Successful",
+      description: `${selectedVehicle.vehicleNumber} has entered for ${gateInForm.operationType} of container ${gateInForm.containerId}.`,
+    });
+    setGateInOpen(false);
+    setSelectedVehicle(null);
+  };
+
+  const handleVehicleGateOut = () => {
+    if (!selectedVehicle || !gateOutForm.operationType || !gateOutForm.containerId) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setVehicles(prev => prev.map(v => 
+      v.id === selectedVehicle.id 
+        ? { ...v, status: 'inactive' as const, currentLocation: 'Exited Terminal' }
+        : v
+    ));
+
+    toast({
+      title: "Vehicle Gate-Out Successful",
+      description: `${selectedVehicle.vehicleNumber} has exited after ${gateOutForm.operationType} of container ${gateOutForm.containerId}.`,
+    });
+    setGateOutOpen(false);
+    setSelectedVehicle(null);
+  };
   const vehicleColumns: Column<Vehicle>[] = [
     { key: 'vehicleNumber', header: 'Vehicle No.', sortable: true },
     { key: 'type', header: 'Type', render: (item) => <span className="capitalize">{item.type}</span> },
@@ -137,48 +222,58 @@ export default function OperatorEquipmentVehicles() {
       key: 'actions',
       header: 'Actions',
       render: (item) => (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button size="sm" variant="outline">Details</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Vehicle Details</DialogTitle>
-              <DialogDescription>{item.vehicleNumber}</DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-muted-foreground">Vehicle Number</Label>
-                  <p className="font-medium">{item.vehicleNumber}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Type</Label>
-                  <p className="font-medium capitalize">{item.type}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Driver</Label>
-                  <p className="font-medium">{item.driverName}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Phone</Label>
-                  <p className="font-medium">{item.driverPhone}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">Current Location</Label>
-                  <p className="font-medium">{item.currentLocation || 'N/A'}</p>
-                </div>
-                <div>
-                  <Label className="text-muted-foreground">GPS Device</Label>
-                  <p className="font-medium">{item.gpsDeviceId || 'N/A'}</p>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={() => openGateIn(item)}>
+            <LogIn className="h-3 w-3 mr-1" />
+            Gate In
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => openGateOut(item)}>
+            <LogOut className="h-3 w-3 mr-1" />
+            Gate Out
+          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="sm" variant="ghost">Details</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Vehicle Details</DialogTitle>
+                <DialogDescription>{item.vehicleNumber}</DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-muted-foreground">Vehicle Number</Label>
+                    <p className="font-medium">{item.vehicleNumber}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Type</Label>
+                    <p className="font-medium capitalize">{item.type}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Driver</Label>
+                    <p className="font-medium">{item.driverName}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Phone</Label>
+                    <p className="font-medium">{item.driverPhone}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">Current Location</Label>
+                    <p className="font-medium">{item.currentLocation || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <Label className="text-muted-foreground">GPS Device</Label>
+                    <p className="font-medium">{item.gpsDeviceId || 'N/A'}</p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline">Close</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter>
+                <Button variant="outline">Close</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       ),
     },
   ];
@@ -255,7 +350,7 @@ export default function OperatorEquipmentVehicles() {
 
             <TabsContent value="vehicles">
               <DataTable
-                data={dummyVehicles}
+                data={vehicles}
                 columns={vehicleColumns}
                 searchPlaceholder="Search vehicles..."
               />
@@ -396,6 +491,192 @@ export default function OperatorEquipmentVehicles() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setUpdateStatusOpen(false)}>Cancel</Button>
             <Button onClick={handleUpdateStatus}>Update Status</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Vehicle Gate In Dialog */}
+      <Dialog open={gateInOpen} onOpenChange={setGateInOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <LogIn className="h-5 w-5 text-green-600" />
+              Vehicle Gate-In for Stuffing/Destuffing
+            </DialogTitle>
+            <DialogDescription>
+              {selectedVehicle?.vehicleNumber} - Driver: {selectedVehicle?.driverName}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Operation Type *</Label>
+              <Select 
+                value={gateInForm.operationType} 
+                onValueChange={(v) => setGateInForm(prev => ({ ...prev, operationType: v }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select operation type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="stuffing">Stuffing</SelectItem>
+                  <SelectItem value="destuffing">Destuffing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Container ID *</Label>
+              <Select 
+                value={gateInForm.containerId} 
+                onValueChange={(v) => setGateInForm(prev => ({ ...prev, containerId: v }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select container" />
+                </SelectTrigger>
+                <SelectContent>
+                  {pendingTerminalOps.map(op => (
+                    <SelectItem key={op.id} value={op.containerNumber}>
+                      {op.containerNumber} - {op.type}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="manual">Enter Manually</SelectItem>
+                </SelectContent>
+              </Select>
+              {gateInForm.containerId === 'manual' && (
+                <Input 
+                  placeholder="Enter container ID"
+                  className="mt-2"
+                  onChange={(e) => setGateInForm(prev => ({ ...prev, containerId: e.target.value }))}
+                />
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label>Purpose</Label>
+              <Select 
+                value={gateInForm.purpose} 
+                onValueChange={(v) => setGateInForm(prev => ({ ...prev, purpose: v }))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="stuffing">Terminal Stuffing</SelectItem>
+                  <SelectItem value="destuffing">Terminal Destuffing</SelectItem>
+                  <SelectItem value="cargo-delivery">Cargo Delivery</SelectItem>
+                  <SelectItem value="cargo-pickup">Cargo Pickup</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Remarks</Label>
+              <Textarea 
+                placeholder="Any additional notes..."
+                value={gateInForm.remarks}
+                onChange={(e) => setGateInForm(prev => ({ ...prev, remarks: e.target.value }))}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setGateInOpen(false)}>Cancel</Button>
+            <Button onClick={handleVehicleGateIn} className="bg-green-600 hover:bg-green-700">
+              <LogIn className="h-4 w-4 mr-2" />
+              Confirm Gate-In
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Vehicle Gate Out Dialog */}
+      <Dialog open={gateOutOpen} onOpenChange={setGateOutOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <LogOut className="h-5 w-5 text-orange-600" />
+              Vehicle Gate-Out after Stuffing/Destuffing
+            </DialogTitle>
+            <DialogDescription>
+              {selectedVehicle?.vehicleNumber} - Driver: {selectedVehicle?.driverName}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Operation Completed *</Label>
+              <Select 
+                value={gateOutForm.operationType} 
+                onValueChange={(v) => setGateOutForm(prev => ({ ...prev, operationType: v }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select completed operation" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="stuffing">Stuffing Completed</SelectItem>
+                  <SelectItem value="destuffing">Destuffing Completed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Container ID *</Label>
+              <Select 
+                value={gateOutForm.containerId} 
+                onValueChange={(v) => setGateOutForm(prev => ({ ...prev, containerId: v }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select container" />
+                </SelectTrigger>
+                <SelectContent>
+                  {pendingTerminalOps.map(op => (
+                    <SelectItem key={op.id} value={op.containerNumber}>
+                      {op.containerNumber} - {op.type}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="manual">Enter Manually</SelectItem>
+                </SelectContent>
+              </Select>
+              {gateOutForm.containerId === 'manual' && (
+                <Input 
+                  placeholder="Enter container ID"
+                  className="mt-2"
+                  onChange={(e) => setGateOutForm(prev => ({ ...prev, containerId: e.target.value }))}
+                />
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label>Exit Purpose</Label>
+              <Select 
+                value={gateOutForm.purpose} 
+                onValueChange={(v) => setGateOutForm(prev => ({ ...prev, purpose: v }))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="stuffing">Stuffing Complete - Exiting</SelectItem>
+                  <SelectItem value="destuffing">Destuffing Complete - Cargo Loaded</SelectItem>
+                  <SelectItem value="cargo-delivered">Cargo Delivered</SelectItem>
+                  <SelectItem value="cargo-collected">Cargo Collected</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Remarks</Label>
+              <Textarea 
+                placeholder="Any additional notes..."
+                value={gateOutForm.remarks}
+                onChange={(e) => setGateOutForm(prev => ({ ...prev, remarks: e.target.value }))}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setGateOutOpen(false)}>Cancel</Button>
+            <Button onClick={handleVehicleGateOut} className="bg-orange-600 hover:bg-orange-700">
+              <LogOut className="h-4 w-4 mr-2" />
+              Confirm Gate-Out
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
