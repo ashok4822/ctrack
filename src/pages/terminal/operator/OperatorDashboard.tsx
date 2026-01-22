@@ -355,7 +355,7 @@ export default function OperatorDashboard() {
       </Card>
 
       {/* Task Queue and Gate Operations */}
-      <div className="grid gap-6 lg:grid-cols-6">
+      <div className="grid gap-6 lg:grid-cols-1">
         {/* Task Queue */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
