@@ -33,6 +33,7 @@ import {
   RefreshCw,
   LogIn,
   LogOut,
+  Send,
 } from 'lucide-react';
 import { dummyVehicles, dummyEquipment, dummyStuffingOperations } from '@/data/dummyData';
 import type { Vehicle, Equipment } from '@/types';
@@ -75,6 +76,17 @@ export default function OperatorEquipmentVehicles() {
   const [statusForm, setStatusForm] = useState({
     status: '',
     notes: '',
+  });
+
+  // Request Approval state
+  const [approvalDialogOpen, setApprovalDialogOpen] = useState(false);
+  const [approvalType, setApprovalType] = useState<'vehicle' | 'equipment'>('vehicle');
+  const [approvalItem, setApprovalItem] = useState<Vehicle | Equipment | null>(null);
+  const [approvalForm, setApprovalForm] = useState({
+    requestType: '',
+    priority: 'normal',
+    reason: '',
+    remarks: '',
   });
 
   const activeVehicles = vehicles.filter(v => v.status === 'active');
@@ -158,6 +170,35 @@ export default function OperatorEquipmentVehicles() {
     setSelectedVehicle(vehicle);
     setGateOutForm({ operationType: '', containerId: '', purpose: 'stuffing', remarks: '' });
     setGateOutOpen(true);
+  };
+
+  const openApprovalDialog = (item: Vehicle | Equipment, type: 'vehicle' | 'equipment') => {
+    setApprovalItem(item);
+    setApprovalType(type);
+    setApprovalForm({ requestType: '', priority: 'normal', reason: '', remarks: '' });
+    setApprovalDialogOpen(true);
+  };
+
+  const handleRequestApproval = () => {
+    if (!approvalItem || !approvalForm.requestType || !approvalForm.reason) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const itemName = approvalType === 'vehicle' 
+      ? (approvalItem as Vehicle).vehicleNumber 
+      : (approvalItem as Equipment).name;
+
+    toast({
+      title: "Approval Request Submitted",
+      description: `Request for ${itemName} has been sent to manager for approval.`,
+    });
+    setApprovalDialogOpen(false);
+    setApprovalItem(null);
   };
 
   const handleVehicleGateIn = () => {
@@ -273,6 +314,10 @@ export default function OperatorEquipmentVehicles() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
+          <Button size="sm" variant="secondary" onClick={() => openApprovalDialog(item, 'vehicle')}>
+            <Send className="h-3 w-3 mr-1" />
+            Request Approval
+          </Button>
         </div>
       ),
     },
@@ -304,6 +349,10 @@ export default function OperatorEquipmentVehicles() {
           <Button size="sm" variant="outline" onClick={() => openUpdateStatus(item)}>
             <RefreshCw className="h-3 w-3 mr-1" />
             Update Status
+          </Button>
+          <Button size="sm" variant="secondary" onClick={() => openApprovalDialog(item, 'equipment')}>
+            <Send className="h-3 w-3 mr-1" />
+            Request Approval
           </Button>
         </div>
       ),
@@ -500,7 +549,7 @@ export default function OperatorEquipmentVehicles() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <LogIn className="h-5 w-5 text-green-600" />
+              <LogIn className="h-5 w-5 text-success" />
               Vehicle Gate-In for Stuffing/Destuffing
             </DialogTitle>
             <DialogDescription>
@@ -580,7 +629,7 @@ export default function OperatorEquipmentVehicles() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setGateInOpen(false)}>Cancel</Button>
-            <Button onClick={handleVehicleGateIn} className="bg-green-600 hover:bg-green-700">
+            <Button onClick={handleVehicleGateIn}>
               <LogIn className="h-4 w-4 mr-2" />
               Confirm Gate-In
             </Button>
@@ -593,7 +642,7 @@ export default function OperatorEquipmentVehicles() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <LogOut className="h-5 w-5 text-orange-600" />
+              <LogOut className="h-5 w-5 text-primary" />
               Vehicle Gate-Out after Stuffing/Destuffing
             </DialogTitle>
             <DialogDescription>
@@ -673,9 +722,94 @@ export default function OperatorEquipmentVehicles() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setGateOutOpen(false)}>Cancel</Button>
-            <Button onClick={handleVehicleGateOut} className="bg-orange-600 hover:bg-orange-700">
+            <Button onClick={handleVehicleGateOut}>
               <LogOut className="h-4 w-4 mr-2" />
               Confirm Gate-Out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Request Approval Dialog */}
+      <Dialog open={approvalDialogOpen} onOpenChange={setApprovalDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Request Manager Approval</DialogTitle>
+            <DialogDescription>
+              {approvalType === 'vehicle' 
+                ? (approvalItem as Vehicle)?.vehicleNumber 
+                : (approvalItem as Equipment)?.name} - {approvalType}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Request Type *</Label>
+              <Select value={approvalForm.requestType} onValueChange={(v) => setApprovalForm(prev => ({ ...prev, requestType: v }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select request type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {approvalType === 'vehicle' ? (
+                    <>
+                      <SelectItem value="extended-stay">Extended Terminal Stay</SelectItem>
+                      <SelectItem value="special-access">Special Access Request</SelectItem>
+                      <SelectItem value="driver-change">Driver Change</SelectItem>
+                      <SelectItem value="damage-clearance">Damage Clearance</SelectItem>
+                      <SelectItem value="overweight">Overweight Approval</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </>
+                  ) : (
+                    <>
+                      <SelectItem value="maintenance-request">Maintenance Request</SelectItem>
+                      <SelectItem value="overtime-use">Overtime Usage</SelectItem>
+                      <SelectItem value="special-operation">Special Operation</SelectItem>
+                      <SelectItem value="repair-approval">Repair Approval</SelectItem>
+                      <SelectItem value="decommission">Decommission Request</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Priority</Label>
+              <Select value={approvalForm.priority} onValueChange={(v) => setApprovalForm(prev => ({ ...prev, priority: v }))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Reason *</Label>
+              <Textarea 
+                placeholder="Explain why approval is needed..."
+                value={approvalForm.reason}
+                onChange={(e) => setApprovalForm(prev => ({ ...prev, reason: e.target.value }))}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Additional Remarks</Label>
+              <Textarea 
+                placeholder="Any additional information..."
+                value={approvalForm.remarks}
+                onChange={(e) => setApprovalForm(prev => ({ ...prev, remarks: e.target.value }))}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setApprovalDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleRequestApproval}>
+              <Send className="h-4 w-4 mr-2" />
+              Submit Request
             </Button>
           </DialogFooter>
         </DialogContent>
