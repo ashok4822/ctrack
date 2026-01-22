@@ -23,13 +23,15 @@ import {
   CheckCircle,
   Receipt,
   Lock,
+  Wallet,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { Bill } from '@/types';
+import { dummyPDAs } from '@/data/dummyData';
 
-type PaymentMethod = 'card' | 'bank' | 'upi';
+type PaymentMethod = 'card' | 'bank' | 'upi' | 'pda';
 
 export default function Payment() {
   const navigate = useNavigate();
@@ -53,6 +55,10 @@ export default function Payment() {
     accountName: '',
   });
   const [upiId, setUpiId] = useState('');
+
+  // Mock PDA data for shipping line
+  const pdaAccount = dummyPDAs[0]; // Using first PDA as example
+  const hasSufficientPdaBalance = bill ? pdaAccount.balance >= bill.totalAmount : false;
 
   // Generate transaction ID
   const transactionId = `TXN${Date.now().toString().slice(-8)}`;
@@ -125,7 +131,8 @@ export default function Payment() {
                       <p className="text-muted-foreground">Payment Method</p>
                       <p className="font-medium capitalize">
                         {paymentMethod === 'card' ? 'Credit/Debit Card' : 
-                         paymentMethod === 'bank' ? 'Bank Transfer' : 'UPI'}
+                         paymentMethod === 'bank' ? 'Bank Transfer' : 
+                         paymentMethod === 'pda' ? 'Pre-Deposit Account' : 'UPI'}
                       </p>
                     </div>
                     <div>
@@ -207,7 +214,7 @@ export default function Payment() {
               <RadioGroup
                 value={paymentMethod}
                 onValueChange={(value) => setPaymentMethod(value as PaymentMethod)}
-                className="grid grid-cols-3 gap-4"
+                className="grid grid-cols-2 sm:grid-cols-4 gap-4"
               >
                 <Label
                   htmlFor="card"
@@ -238,6 +245,16 @@ export default function Payment() {
                   <RadioGroupItem value="upi" id="upi" className="sr-only" />
                   <Smartphone className={`h-6 w-6 ${paymentMethod === 'upi' ? 'text-primary' : 'text-muted-foreground'}`} />
                   <span className="text-sm font-medium">UPI</span>
+                </Label>
+                <Label
+                  htmlFor="pda"
+                  className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 cursor-pointer transition-colors ${
+                    paymentMethod === 'pda' ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <RadioGroupItem value="pda" id="pda" className="sr-only" />
+                  <Wallet className={`h-6 w-6 ${paymentMethod === 'pda' ? 'text-primary' : 'text-muted-foreground'}`} />
+                  <span className="text-sm font-medium">PDA</span>
                 </Label>
               </RadioGroup>
             </CardContent>
@@ -342,6 +359,59 @@ export default function Payment() {
                   </p>
                 </div>
               )}
+
+              {paymentMethod === 'pda' && (
+                <div className="space-y-4">
+                  {/* PDA Account Info */}
+                  <Card className="bg-muted/50">
+                    <CardContent className="pt-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <Wallet className="h-5 w-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-medium">PDA-{pdaAccount.id.slice(0, 8).toUpperCase()}</p>
+                            <p className="text-sm text-muted-foreground">{pdaAccount.shippingLine}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Separator className="my-3" />
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                          <p className="text-muted-foreground">Current Balance</p>
+                          <p className="text-xl font-bold text-foreground">${pdaAccount.balance.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-muted-foreground">After Payment</p>
+                          <p className="text-xl font-bold text-foreground">
+                            ${(pdaAccount.balance - (bill?.totalAmount || 0)).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  {hasSufficientPdaBalance ? (
+                    <div className="flex items-center gap-2 text-sm text-green-500">
+                      <CheckCircle className="h-4 w-4" />
+                      <span>Sufficient balance available for this payment</span>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
+                      <p className="text-sm text-destructive font-medium">Insufficient PDA Balance</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Your PDA balance (${pdaAccount.balance.toLocaleString()}) is less than the bill amount 
+                        (${bill?.totalAmount.toLocaleString()}). Please top up your PDA or choose another payment method.
+                      </p>
+                    </div>
+                  )}
+
+                  <p className="text-sm text-muted-foreground">
+                    Payment will be deducted from your Pre-Deposit Account. The transaction will be instant.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -402,7 +472,7 @@ export default function Payment() {
                 className="w-full" 
                 size="lg" 
                 onClick={handlePayment}
-                disabled={isProcessing}
+                disabled={isProcessing || (paymentMethod === 'pda' && !hasSufficientPdaBalance)}
               >
                 {isProcessing ? (
                   <>
