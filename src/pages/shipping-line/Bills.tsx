@@ -33,10 +33,16 @@ import {
 } from 'lucide-react';
 import { dummyBills } from '@/data/dummyData';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Bill } from '@/types';
 
 export default function Bills() {
   const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
+  const navigate = useNavigate();
+
+  const handlePayNow = (bill: Bill) => {
+    navigate('/shipping-line/payment', { state: { bill } });
+  };
 
   // Use dummy bills data
   const myBills = dummyBills;
@@ -176,7 +182,10 @@ export default function Bills() {
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
-            <Button>
+            <Button onClick={() => {
+              const pendingBill = myBills.find(b => b.status === 'pending' || b.status === 'overdue');
+              if (pendingBill) handlePayNow(pendingBill);
+            }}>
               <CreditCard className="h-4 w-4 mr-2" />
               Pay Now
             </Button>
@@ -287,7 +296,7 @@ export default function Bills() {
                   Download PDF
                 </Button>
                 {selectedBill.status !== 'paid' && (
-                  <Button>
+                  <Button onClick={() => handlePayNow(selectedBill)}>
                     <CreditCard className="h-4 w-4 mr-2" />
                     Pay Now
                   </Button>
