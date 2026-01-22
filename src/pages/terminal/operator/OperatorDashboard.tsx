@@ -355,7 +355,7 @@ export default function OperatorDashboard() {
       </Card>
 
       {/* Task Queue and Gate Operations */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-6">
         {/* Task Queue */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -394,7 +394,7 @@ export default function OperatorDashboard() {
         </Card>
 
         {/* Pending Gate Operations */}
-        {/* <Card>
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-semibold">Pending Gate Operations</CardTitle>
             <Button variant="ghost" size="sm" asChild>
@@ -410,8 +410,10 @@ export default function OperatorDashboard() {
                   key={op.id}
                   className="flex items-center gap-4 rounded-lg border p-3 hover:bg-muted/50 transition-colors"
                 >
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${op.type === 'gate-in' ? 'bg-success/10' : 'bg-primary/10'}`}>
-                    <DoorOpen className={`h-5 w-5 ${op.type === 'gate-in' ? 'text-success' : 'text-primary'}`} />
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-lg ${op.type === "gate-in" ? "bg-success/10" : "bg-primary/10"}`}
+                  >
+                    <DoorOpen className={`h-5 w-5 ${op.type === "gate-in" ? "text-success" : "text-primary"}`} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-foreground">{op.containerNumber}</p>
@@ -427,7 +429,7 @@ export default function OperatorDashboard() {
               )}
             </div>
           </CardContent>
-        </Card> */}
+        </Card>
       </div>
     </DashboardLayout>
   );
