@@ -23,14 +23,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Package, Clock, CheckCircle, Plus, Container } from 'lucide-react';
+import { Package, Clock, CheckCircle, Plus, Container, Eye, Edit } from 'lucide-react';
 import { dummyStuffingOperations, dummyContainers } from '@/data/dummyData';
 import { useState } from 'react';
 import type { StuffingOperation } from '@/types';
+import { useToast } from '@/hooks/use-toast';
 
 export default function CustomerStuffingDestuffing() {
   const [showRequestDialog, setShowRequestDialog] = useState(false);
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
+  const [selectedOperation, setSelectedOperation] = useState<StuffingOperation | null>(null);
   const [requestType, setRequestType] = useState<'stuffing' | 'destuffing'>('stuffing');
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+  const [newStatus, setNewStatus] = useState<string>('');
+  const [statusRemarks, setStatusRemarks] = useState('');
+  const { toast } = useToast();
   
   // Filter containers for this customer
   const myContainers = dummyContainers.filter(c => c.customer === 'ABC Manufacturing');
@@ -38,6 +45,28 @@ export default function CustomerStuffingDestuffing() {
   const pendingOps = dummyStuffingOperations.filter(op => op.status === 'pending').length;
   const inProgressOps = dummyStuffingOperations.filter(op => op.status === 'in-progress').length;
   const completedOps = dummyStuffingOperations.filter(op => op.status === 'completed').length;
+
+  const handleViewDetails = (operation: StuffingOperation) => {
+    setSelectedOperation(operation);
+    setNewStatus(operation.status);
+    setStatusRemarks('');
+    setIsUpdatingStatus(false);
+    setShowDetailsDialog(true);
+  };
+
+  const handleUpdateStatus = () => {
+    if (!selectedOperation || !newStatus) return;
+    
+    // Simulate status update
+    toast({
+      title: "Status Update Requested",
+      description: `Request to update ${selectedOperation.containerNumber} status to "${newStatus}" has been submitted for approval.`,
+    });
+    
+    setShowDetailsDialog(false);
+    setSelectedOperation(null);
+    setIsUpdatingStatus(false);
+  };
 
   const columns: Column<StuffingOperation>[] = [
     {
@@ -80,12 +109,35 @@ export default function CustomerStuffingDestuffing() {
       render: (item) =>
         item.completedDate ? new Date(item.completedDate).toLocaleDateString() : '-',
     },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (item) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => handleViewDetails(item)}
+          className="gap-1"
+        >
+          <Eye className="h-4 w-4" />
+          View
+        </Button>
+      ),
+    },
   ];
 
   const handleNewRequest = (type: 'stuffing' | 'destuffing') => {
     setRequestType(type);
     setShowRequestDialog(true);
   };
+
+  const customerStatusOptions = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'ready-for-operation', label: 'Ready for Operation' },
+    { value: 'cargo-arrived', label: 'Cargo Arrived' },
+    { value: 'documents-submitted', label: 'Documents Submitted' },
+    { value: 'cancelled', label: 'Request Cancellation' },
+  ];
 
   return (
     <DashboardLayout
@@ -230,6 +282,107 @@ export default function CustomerStuffingDestuffing() {
             <Button onClick={() => setShowRequestDialog(false)}>
               Submit Request
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Operation Details Dialog with Status Update */}
+      <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Operation Details</DialogTitle>
+          </DialogHeader>
+          {selectedOperation && (
+            <div className="space-y-4">
+              {/* Operation Info */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-sm text-muted-foreground">Container</p>
+                  <p className="font-mono font-medium">{selectedOperation.containerNumber}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Type</p>
+                  <p className="capitalize font-medium">{selectedOperation.type}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Location</p>
+                  <p className="capitalize">{selectedOperation.location}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Current Status</p>
+                  <StatusBadge status={selectedOperation.status} />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Scheduled Date</p>
+                  <p>{new Date(selectedOperation.scheduledDate).toLocaleString()}</p>
+                </div>
+                {selectedOperation.completedDate && (
+                  <div>
+                    <p className="text-sm text-muted-foreground">Completed Date</p>
+                    <p>{new Date(selectedOperation.completedDate).toLocaleString()}</p>
+                  </div>
+                )}
+              </div>
+
+              {selectedOperation.remarks && (
+                <div>
+                  <p className="text-sm text-muted-foreground">Remarks</p>
+                  <p className="text-sm">{selectedOperation.remarks}</p>
+                </div>
+              )}
+
+              {/* Status Update Section */}
+              {selectedOperation.status !== 'completed' && (
+                <div className="border-t pt-4">
+                  {!isUpdatingStatus ? (
+                    <Button
+                      variant="outline"
+                      onClick={() => setIsUpdatingStatus(true)}
+                      className="w-full gap-2"
+                    >
+                      <Edit className="h-4 w-4" />
+                      Request Status Update
+                    </Button>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label>New Status</Label>
+                        <Select value={newStatus} onValueChange={setNewStatus}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select new status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {customerStatusOptions.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Reason / Remarks</Label>
+                        <Textarea
+                          value={statusRemarks}
+                          onChange={(e) => setStatusRemarks(e.target.value)}
+                          placeholder="Please provide reason for status change..."
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDetailsDialog(false)}>
+              Close
+            </Button>
+            {isUpdatingStatus && (
+              <Button onClick={handleUpdateStatus} disabled={!newStatus}>
+                Submit Update Request
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
