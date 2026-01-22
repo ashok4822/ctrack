@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { KPICard } from '@/components/common/KPICard';
-import { operatorNavItems } from '@/config/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { StatusBadge } from '@/components/common/StatusBadge';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { useState } from "react";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { KPICard } from "@/components/common/KPICard";
+import { operatorNavItems } from "@/config/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/common/StatusBadge";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DoorOpen,
   Container,
@@ -30,10 +30,10 @@ import {
   Package,
   User,
   Phone,
-} from 'lucide-react';
-import { dummyKPIData, dummyTasks, dummyGateOperations, dummyNominations } from '@/data/dummyData';
-import { Link } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
+} from "lucide-react";
+import { dummyKPIData, dummyTasks, dummyGateOperations, dummyNominations } from "@/data/dummyData";
+import { Link } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface Nomination {
   id: string;
@@ -62,23 +62,23 @@ export default function OperatorDashboard() {
   const { toast } = useToast();
   const [nominations, setNominations] = useState<Nomination[]>(dummyNominations as Nomination[]);
   const [selectedNomination, setSelectedNomination] = useState<Nomination | null>(null);
-  const [rejectionReason, setRejectionReason] = useState('');
+  const [rejectionReason, setRejectionReason] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const pendingTasks = dummyTasks.filter(t => t.status !== 'completed');
-  const pendingGateOps = dummyGateOperations.filter(g => g.status === 'pending');
-  const pendingNominations = nominations.filter(n => n.status === 'pending');
+  const pendingTasks = dummyTasks.filter((t) => t.status !== "completed");
+  const pendingGateOps = dummyGateOperations.filter((g) => g.status === "pending");
+  const pendingNominations = nominations.filter((n) => n.status === "pending");
 
   const handleApproveLoading = (nomination: Nomination) => {
-    setNominations(prev => 
-      prev.map(n => 
-        n.id === nomination.id 
-          ? { ...n, status: 'approved', approvedAt: new Date().toISOString(), approvedBy: 'Mike Operator' }
-          : n
-      )
+    setNominations((prev) =>
+      prev.map((n) =>
+        n.id === nomination.id
+          ? { ...n, status: "approved", approvedAt: new Date().toISOString(), approvedBy: "Mike Operator" }
+          : n,
+      ),
     );
     toast({
-      title: 'Loading Approved',
+      title: "Loading Approved",
       description: `Container ${nomination.containerNumber} has been approved for loading to truck ${nomination.truckNumber}`,
     });
     setDialogOpen(false);
@@ -88,62 +88,49 @@ export default function OperatorDashboard() {
   const handleRejectLoading = (nomination: Nomination) => {
     if (!rejectionReason.trim()) {
       toast({
-        title: 'Rejection Reason Required',
-        description: 'Please provide a reason for rejecting the loading request.',
-        variant: 'destructive',
+        title: "Rejection Reason Required",
+        description: "Please provide a reason for rejecting the loading request.",
+        variant: "destructive",
       });
       return;
     }
-    setNominations(prev => 
-      prev.map(n => 
-        n.id === nomination.id 
-          ? { ...n, status: 'rejected', rejectedAt: new Date().toISOString(), rejectedBy: 'Mike Operator', rejectionReason }
-          : n
-      )
+    setNominations((prev) =>
+      prev.map((n) =>
+        n.id === nomination.id
+          ? {
+              ...n,
+              status: "rejected",
+              rejectedAt: new Date().toISOString(),
+              rejectedBy: "Mike Operator",
+              rejectionReason,
+            }
+          : n,
+      ),
     );
     toast({
-      title: 'Loading Rejected',
+      title: "Loading Rejected",
       description: `Container ${nomination.containerNumber} loading request has been rejected.`,
-      variant: 'destructive',
+      variant: "destructive",
     });
     setDialogOpen(false);
     setSelectedNomination(null);
-    setRejectionReason('');
+    setRejectionReason("");
   };
 
   return (
     <DashboardLayout navItems={operatorNavItems} pageTitle="Operator Dashboard">
       {/* KPI Cards */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <KPICard
-          title="Gate-Ins Today"
-          value={dummyKPIData.gateInToday}
-          icon={DoorOpen}
-          variant="success"
-        />
-        <KPICard
-          title="Gate-Outs Today"
-          value={dummyKPIData.gateOutToday}
-          icon={DoorOpen}
-        />
+        <KPICard title="Gate-Ins Today" value={dummyKPIData.gateInToday} icon={DoorOpen} variant="success" />
+        <KPICard title="Gate-Outs Today" value={dummyKPIData.gateOutToday} icon={DoorOpen} />
         <KPICard
           title="Containers in Yard"
           value={dummyKPIData.totalContainersInYard}
           icon={Container}
           variant="primary"
         />
-        <KPICard
-          title="Tasks Pending"
-          value={dummyKPIData.tasksToday || 0}
-          icon={CheckSquare}
-          variant="warning"
-        />
-        <KPICard
-          title="Nominations Pending"
-          value={pendingNominations.length}
-          icon={FileCheck}
-          variant="primary"
-        />
+        <KPICard title="Tasks Pending" value={dummyKPIData.tasksToday || 0} icon={CheckSquare} variant="warning" />
+        <KPICard title="Nominations Pending" value={pendingNominations.length} icon={FileCheck} variant="primary" />
       </div>
 
       {/* Quick Actions */}
@@ -181,9 +168,7 @@ export default function OperatorDashboard() {
             <Truck className="h-5 w-5 text-primary" />
             Nominated Containers - Pending Loading Approval
           </CardTitle>
-          <span className="text-sm text-muted-foreground">
-            {pendingNominations.length} pending
-          </span>
+          <span className="text-sm text-muted-foreground">{pendingNominations.length} pending</span>
         </CardHeader>
         <CardContent>
           {pendingNominations.length === 0 ? (
@@ -224,15 +209,18 @@ export default function OperatorDashboard() {
                       Shipping Line: {nomination.shippingLine} • Customer: {nomination.customer}
                     </p>
                   </div>
-                  <Dialog open={dialogOpen && selectedNomination?.id === nomination.id} onOpenChange={(open) => {
-                    setDialogOpen(open);
-                    if (!open) {
-                      setSelectedNomination(null);
-                      setRejectionReason('');
-                    }
-                  }}>
+                  <Dialog
+                    open={dialogOpen && selectedNomination?.id === nomination.id}
+                    onOpenChange={(open) => {
+                      setDialogOpen(open);
+                      if (!open) {
+                        setSelectedNomination(null);
+                        setRejectionReason("");
+                      }
+                    }}
+                  >
                     <DialogTrigger asChild>
-                      <Button 
+                      <Button
                         size="sm"
                         onClick={() => {
                           setSelectedNomination(nomination);
@@ -245,9 +233,7 @@ export default function OperatorDashboard() {
                     <DialogContent className="max-w-lg">
                       <DialogHeader>
                         <DialogTitle>Approve Container Loading</DialogTitle>
-                        <DialogDescription>
-                          Review nomination details and approve loading to truck
-                        </DialogDescription>
+                        <DialogDescription>Review nomination details and approve loading to truck</DialogDescription>
                       </DialogHeader>
                       {selectedNomination && (
                         <div className="space-y-4">
@@ -264,7 +250,9 @@ export default function OperatorDashboard() {
                               </div>
                               <div>
                                 <Label className="text-muted-foreground text-xs">Size / Type</Label>
-                                <p className="font-medium">{selectedNomination.size} • {selectedNomination.type}</p>
+                                <p className="font-medium">
+                                  {selectedNomination.size} • {selectedNomination.type}
+                                </p>
                               </div>
                               <div>
                                 <Label className="text-muted-foreground text-xs">Movement Type</Label>
@@ -406,7 +394,7 @@ export default function OperatorDashboard() {
         </Card>
 
         {/* Pending Gate Operations */}
-        <Card>
+        {/* <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-semibold">Pending Gate Operations</CardTitle>
             <Button variant="ghost" size="sm" asChild>
@@ -439,7 +427,7 @@ export default function OperatorDashboard() {
               )}
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </DashboardLayout>
   );
