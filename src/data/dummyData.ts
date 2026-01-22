@@ -439,8 +439,11 @@ export const dummyTasks = [
 
 // Container Nominations (Shipping Line)
 export const dummyNominations = [
-  { id: '1', containerNumber: 'MSCU1234567', customer: 'ABC Manufacturing', factory: 'ABC Factory Chennai', location: 'Chennai', distance: '45 km', status: 'nominated', nominatedAt: '2024-01-21T08:00:00Z' },
-  { id: '2', containerNumber: 'HLCU7654321', customer: 'XYZ Foods', factory: 'XYZ Cold Storage', location: 'Bangalore', distance: '320 km', status: 'pending', nominatedAt: '2024-01-20T14:00:00Z' },
+  { id: '1', containerNumber: 'MSCU1234567', shippingLine: 'MSC', customer: 'ABC Manufacturing', factory: 'ABC Factory Chennai', location: 'Chennai', distance: '45 km', size: '40ft', type: 'standard', movementType: 'export', status: 'pending', nominatedAt: '2024-01-21T08:00:00Z', truckNumber: 'TN-01-AB-1234', driverName: 'Rajesh Kumar', driverPhone: '+91 9876543210' },
+  { id: '2', containerNumber: 'HLCU7654321', shippingLine: 'Hapag-Lloyd', customer: 'XYZ Foods', factory: 'XYZ Cold Storage', location: 'Bangalore', distance: '320 km', size: '20ft', type: 'reefer', movementType: 'import', status: 'pending', nominatedAt: '2024-01-20T14:00:00Z', truckNumber: 'KA-01-CD-5678', driverName: 'Suresh Babu', driverPhone: '+91 9876543211' },
+  { id: '3', containerNumber: 'NYKU8765432', shippingLine: 'NYK Line', customer: 'Delta Electronics', factory: 'Delta Assembly Unit', location: 'Hosur', distance: '65 km', size: '40ft', type: 'standard', movementType: 'export', status: 'approved', nominatedAt: '2024-01-19T10:00:00Z', truckNumber: 'TN-02-EF-9012', driverName: 'Vinod Sharma', driverPhone: '+91 9876543212', approvedAt: '2024-01-19T11:30:00Z', approvedBy: 'Mike Operator' },
+  { id: '4', containerNumber: 'KKFU1122334', shippingLine: 'Evergreen', customer: 'Global Textiles', factory: 'Global Spinning Mill', location: 'Coimbatore', distance: '180 km', size: '20ft', type: 'standard', movementType: 'domestic', status: 'pending', nominatedAt: '2024-01-21T06:30:00Z', truckNumber: 'TN-03-GH-3456', driverName: 'Arun Prasad', driverPhone: '+91 9876543213' },
+  { id: '5', containerNumber: 'MSKU5544332', shippingLine: 'Maersk', customer: 'Pharma Solutions', factory: 'Pharma Cold Chain', location: 'Oragadam', distance: '35 km', size: '40ft', type: 'reefer', movementType: 'import', status: 'rejected', nominatedAt: '2024-01-18T09:00:00Z', truckNumber: 'TN-04-IJ-7890', driverName: 'Karthik Raj', driverPhone: '+91 9876543214', rejectedAt: '2024-01-18T10:00:00Z', rejectedBy: 'Mike Operator', rejectionReason: 'Container not cleared by customs' },
 ];
 
 // Customer Requests
