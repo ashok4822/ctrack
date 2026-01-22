@@ -27,15 +27,20 @@ import {
   Plus,
   Search,
   Clock,
+  Send,
 } from 'lucide-react';
 import { dummyGateOperations, dummyKPIData, dummyShippingLines } from '@/data/dummyData';
 import type { GateOperation } from '@/types';
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function OperatorGateOperations() {
+  const { toast } = useToast();
   const [selectedOperation, setSelectedOperation] = useState<GateOperation | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasDamage, setHasDamage] = useState(false);
+  const [requiresApproval, setRequiresApproval] = useState(false);
+  const [approvalReason, setApprovalReason] = useState('');
   
   const gateIns = dummyGateOperations.filter(op => op.type === 'gate-in');
   const gateOuts = dummyGateOperations.filter(op => op.type === 'gate-out');
@@ -298,10 +303,43 @@ export default function OperatorGateOperations() {
                 <Label htmlFor="seal">Seal Number</Label>
                 <Input id="seal" placeholder="Enter seal number" />
               </div>
+              <div className="space-y-3 pt-2 border-t">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="requireApproval" 
+                    checked={requiresApproval}
+                    onCheckedChange={(checked) => setRequiresApproval(checked === true)}
+                  />
+                  <Label htmlFor="requireApproval" className="cursor-pointer text-primary font-medium">
+                    <Send className="h-3 w-3 inline mr-1" />
+                    Request Manager Approval
+                  </Label>
+                </div>
+                {requiresApproval && (
+                  <div className="space-y-2 pl-6">
+                    <Label htmlFor="approvalReason">Reason for Approval *</Label>
+                    <Textarea 
+                      id="approvalReason" 
+                      placeholder="Explain why manager approval is needed..."
+                      value={approvalReason}
+                      onChange={(e) => setApprovalReason(e.target.value)}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
             <DialogFooter>
               <Button variant="outline">Cancel</Button>
-              <Button>Process Gate-In</Button>
+              <Button onClick={() => {
+                if (requiresApproval) {
+                  toast({
+                    title: "Gate-In Submitted for Approval",
+                    description: "Request has been sent to manager for approval.",
+                  });
+                }
+              }}>
+                {requiresApproval ? 'Submit for Approval' : 'Process Gate-In'}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
