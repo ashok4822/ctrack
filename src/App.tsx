@@ -25,6 +25,7 @@ import SurveysDamage from "./pages/terminal/admin/SurveysDamage";
 import ActivitiesCharges from "./pages/terminal/admin/ActivitiesCharges";
 import ReportsAnalytics from "./pages/terminal/admin/ReportsAnalytics";
 import SystemConfiguration from "./pages/terminal/admin/SystemConfiguration";
+import AdminProfile from "./pages/terminal/admin/Profile";
 
 // Terminal Manager Pages
 import ManagerDashboard from "./pages/terminal/manager/ManagerDashboard";
@@ -108,6 +109,7 @@ const App = () => (
             <Route path="/terminal/admin/charges" element={<ActivitiesCharges />} />
             <Route path="/terminal/admin/reports" element={<ReportsAnalytics />} />
             <Route path="/terminal/admin/settings" element={<SystemConfiguration />} />
+            <Route path="/terminal/admin/profile" element={<AdminProfile />} />
 
             {/* Terminal Manager Routes */}
             <Route path="/terminal/manager/dashboard" element={<ManagerDashboard />} />
