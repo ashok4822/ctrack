@@ -13,6 +13,7 @@ import {
   Users,
   Settings,
   ScrollText,
+  UserCircle,
 } from 'lucide-react';
 
 export const adminNavItems: NavItem[] = [
@@ -29,6 +30,7 @@ export const adminNavItems: NavItem[] = [
   { title: 'User Management', href: '/terminal/admin/users', icon: Users },
   { title: 'System Configuration', href: '/terminal/admin/settings', icon: Settings },
   { title: 'Audit Logs', href: '/terminal/admin/audit', icon: ScrollText },
+  { title: 'Profile', href: '/terminal/admin/profile', icon: UserCircle },
 ];
 
 export const managerNavItems: NavItem[] = [
@@ -41,6 +43,7 @@ export const managerNavItems: NavItem[] = [
   { title: 'Vehicles & Equipment', href: '/terminal/manager/vehicles', icon: Truck },
   { title: 'Reports', href: '/terminal/manager/reports', icon: FileText },
   { title: 'Audit View', href: '/terminal/manager/audit', icon: ScrollText },
+  { title: 'Profile', href: '/terminal/manager/profile', icon: UserCircle },
 ];
 
 export const operatorNavItems: NavItem[] = [
@@ -53,6 +56,7 @@ export const operatorNavItems: NavItem[] = [
   { title: 'Tasks', href: '/terminal/operator/tasks', icon: CheckSquare, badge: 4 },
   { title: 'Billing', href: '/terminal/operator/billing', icon: Receipt },
   { title: 'PDA View', href: '/terminal/operator/pda', icon: FileText },
+  { title: 'Profile', href: '/terminal/operator/profile', icon: UserCircle },
 ];
 
 export const surveyorNavItems: NavItem[] = [
@@ -61,6 +65,7 @@ export const surveyorNavItems: NavItem[] = [
   { title: 'Damage Inspection', href: '/terminal/surveyor/inspection', icon: Container },
   { title: 'Survey Reports', href: '/terminal/surveyor/reports', icon: FileText },
   { title: 'History', href: '/terminal/surveyor/history', icon: ScrollText },
+  { title: 'Profile', href: '/terminal/surveyor/profile', icon: UserCircle },
 ];
 
 export const shippingLineNavItems: NavItem[] = [
@@ -70,6 +75,7 @@ export const shippingLineNavItems: NavItem[] = [
   { title: 'Movements', href: '/shipping-line/movements', icon: Truck },
   { title: 'Bills', href: '/shipping-line/bills', icon: Receipt },
   { title: 'Reports', href: '/shipping-line/reports', icon: FileText },
+  { title: 'Profile', href: '/shipping-line/profile', icon: UserCircle },
 ];
 
 export const customerNavItems: NavItem[] = [
@@ -78,4 +84,5 @@ export const customerNavItems: NavItem[] = [
   { title: 'Stuffing / Destuffing', href: '/customer/stuffing', icon: Package },
   { title: 'Movements', href: '/customer/movements', icon: Truck },
   { title: 'Requests', href: '/customer/requests', icon: CheckSquare },
+  { title: 'Profile', href: '/customer/profile', icon: UserCircle },
 ];
