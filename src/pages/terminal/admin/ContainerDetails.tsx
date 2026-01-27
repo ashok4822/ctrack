@@ -344,16 +344,16 @@ export default function ContainerDetails() {
                     <Label className="text-muted-foreground">Customer</Label>
                     {isEditing ? (
                       <Select
-                        value={editData.customer || ''}
+                        value={editData.customer || '_none'}
                         onValueChange={(value) =>
-                          setEditData({ ...editData, customer: value || undefined })
+                          setEditData({ ...editData, customer: value === '_none' ? undefined : value })
                         }
                       >
                         <SelectTrigger className="mt-1">
                           <SelectValue placeholder="No customer assigned" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">None</SelectItem>
+                          <SelectItem value="_none">None</SelectItem>
                           {dummyCustomers.map((customer) => (
                             <SelectItem key={customer.id} value={customer.name}>
                               {customer.name}
