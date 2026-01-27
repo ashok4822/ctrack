@@ -14,6 +14,7 @@ import CustomerLogin from "./pages/customer/CustomerLogin";
 // Terminal Admin Pages
 import AdminDashboard from "./pages/terminal/admin/AdminDashboard";
 import ContainerList from "./pages/terminal/admin/ContainerList";
+import ContainerDetails from "./pages/terminal/admin/ContainerDetails";
 import YardConfiguration from "./pages/terminal/admin/YardConfiguration";
 import GateOperations from "./pages/terminal/admin/GateOperations";
 import Approvals from "./pages/terminal/admin/Approvals";
@@ -98,6 +99,7 @@ const App = () => (
             {/* Terminal Admin Routes */}
             <Route path="/terminal/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/terminal/admin/containers" element={<ContainerList />} />
+            <Route path="/terminal/admin/containers/:id" element={<ContainerDetails />} />
             <Route path="/terminal/admin/yard" element={<YardConfiguration />} />
             <Route path="/terminal/admin/gate" element={<GateOperations />} />
             <Route path="/terminal/admin/approvals" element={<Approvals />} />
