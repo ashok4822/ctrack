@@ -260,14 +260,17 @@ export function AddContainerDialog({ open, onOpenChange, onSubmit }: AddContaine
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Customer</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select 
+                      onValueChange={(value) => field.onChange(value === '_none' ? '' : value)} 
+                      defaultValue={field.value || '_none'}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select customer (optional)" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="_none">None</SelectItem>
                         {dummyCustomers.map((customer) => (
                           <SelectItem key={customer.id} value={customer.name}>
                             {customer.name}
