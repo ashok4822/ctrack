@@ -3,78 +3,105 @@ import { customerNavItems } from '@/config/navigation';
 import { DataTable, Column } from '@/components/common/DataTable';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import { KPICard } from '@/components/common/KPICard';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { FileText, Clock, CheckCircle, XCircle, Plus, Container, Eye } from 'lucide-react';
+import { FileText, Clock, CheckCircle, XCircle, Eye, Container, Package } from 'lucide-react';
 import { dummyCustomerRequests, dummyContainers } from '@/data/dummyData';
 import { useState } from 'react';
 
 interface CustomerRequest {
   id: string;
+  requestNumber: string;
   type: string;
-  containerNumber: string;
+  containerNumber?: string;
+  cargoDescription: string;
+  cargoWeight: number;
+  isHazardous: boolean;
   preferredDate: string;
   status: string;
   remarks?: string;
   createdAt: string;
+  allocatedContainer?: string;
 }
 
 export default function CustomerRequests() {
-  const [showNewRequestDialog, setShowNewRequestDialog] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<CustomerRequest | null>(null);
   
-  // Filter containers for this customer
-  const myContainers = dummyContainers.filter(c => c.customer === 'ABC Manufacturing');
-  
-  const requests = dummyCustomerRequests as CustomerRequest[];
+  // Map dummy data to include more details
+  const requests: CustomerRequest[] = dummyCustomerRequests.map((r, index) => ({
+    ...r,
+    requestNumber: `REQ-2024-${String(index + 1).padStart(3, '0')}`,
+    cargoDescription: r.type === 'stuffing' ? 'Industrial Machinery Parts' : 'Electronic Components',
+    cargoWeight: r.type === 'stuffing' ? 18500 : 12000,
+    isHazardous: false,
+    allocatedContainer: r.status === 'approved' ? r.containerNumber : undefined,
+  }));
+
   const pendingRequests = requests.filter(r => r.status === 'pending').length;
   const approvedRequests = requests.filter(r => r.status === 'approved').length;
   const rejectedRequests = requests.filter(r => r.status === 'rejected').length;
 
   const columns: Column<CustomerRequest>[] = [
     {
-      key: 'containerNumber',
-      header: 'Container No.',
+      key: 'requestNumber',
+      header: 'Request No.',
       sortable: true,
       render: (item) => (
-        <span className="font-mono font-medium text-foreground">{item.containerNumber}</span>
+        <span className="font-mono font-medium text-primary">{item.requestNumber}</span>
       ),
     },
     {
       key: 'type',
-      header: 'Request Type',
+      header: 'Type',
       sortable: true,
-      render: (item) => <span className="capitalize font-medium">{item.type}</span>,
+      render: (item) => (
+        <div className="flex items-center gap-2">
+          <Package className="h-4 w-4 text-muted-foreground" />
+          <span className="capitalize font-medium">{item.type}</span>
+        </div>
+      ),
+    },
+    {
+      key: 'cargoDescription',
+      header: 'Cargo Description',
+      sortable: true,
+      render: (item) => (
+        <span className="text-sm">{item.cargoDescription}</span>
+      ),
+    },
+    {
+      key: 'cargoWeight',
+      header: 'Weight (kg)',
+      sortable: true,
+      render: (item) => (
+        <span className="font-medium">{item.cargoWeight.toLocaleString()}</span>
+      ),
+    },
+    {
+      key: 'allocatedContainer',
+      header: 'Allocated Container',
+      sortable: true,
+      render: (item) => item.allocatedContainer ? (
+        <div className="flex items-center gap-2">
+          <Container className="h-4 w-4 text-success" />
+          <span className="font-mono text-sm">{item.allocatedContainer}</span>
+        </div>
+      ) : (
+        <span className="text-muted-foreground text-sm">Not allocated</span>
+      ),
     },
     {
       key: 'preferredDate',
       header: 'Preferred Date',
       sortable: true,
       render: (item) => new Date(item.preferredDate).toLocaleDateString(),
-    },
-    {
-      key: 'createdAt',
-      header: 'Requested On',
-      sortable: true,
-      render: (item) => new Date(item.createdAt).toLocaleDateString(),
     },
     {
       key: 'status',
@@ -103,13 +130,7 @@ export default function CustomerRequests() {
   return (
     <DashboardLayout
       navItems={customerNavItems}
-      pageTitle="Requests"
-      pageActions={
-        <Button onClick={() => setShowNewRequestDialog(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          New Request
-        </Button>
-      }
+      pageTitle="Requests Listing"
     >
       {/* KPI Cards */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -142,7 +163,7 @@ export default function CustomerRequests() {
       {/* Requests Table */}
       <Card>
         <CardHeader>
-          <CardTitle>All Requests</CardTitle>
+          <CardTitle>All Service Requests</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="all">
@@ -158,7 +179,7 @@ export default function CustomerRequests() {
                 data={requests}
                 columns={columns}
                 searchable
-                searchPlaceholder="Search requests..."
+                searchPlaceholder="Search by request number, cargo..."
                 onRowClick={setSelectedRequest}
                 emptyMessage="No requests found"
               />
@@ -200,68 +221,9 @@ export default function CustomerRequests() {
         </CardContent>
       </Card>
 
-      {/* New Request Dialog */}
-      <Dialog open={showNewRequestDialog} onOpenChange={setShowNewRequestDialog}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>New Request</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Request Type</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="stuffing">Stuffing</SelectItem>
-                  <SelectItem value="destuffing">Destuffing</SelectItem>
-                  <SelectItem value="movement">Movement</SelectItem>
-                  <SelectItem value="inspection">Inspection</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Container</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select container" />
-                </SelectTrigger>
-                <SelectContent>
-                  {myContainers.map((container) => (
-                    <SelectItem key={container.id} value={container.id}>
-                      <div className="flex items-center gap-2">
-                        <Container className="h-4 w-4" />
-                        {container.containerNumber}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <Label>Preferred Date</Label>
-              <Input type="date" />
-            </div>
-            <div className="space-y-2">
-              <Label>Remarks (Optional)</Label>
-              <Textarea placeholder="Any special instructions..." />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowNewRequestDialog(false)}>
-              Cancel
-            </Button>
-            <Button onClick={() => setShowNewRequestDialog(false)}>
-              Submit Request
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
       {/* Request Details Dialog */}
       <Dialog open={!!selectedRequest} onOpenChange={() => setSelectedRequest(null)}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Request Details</DialogTitle>
           </DialogHeader>
@@ -269,8 +231,8 @@ export default function CustomerRequests() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Container</p>
-                  <p className="font-mono font-medium">{selectedRequest.containerNumber}</p>
+                  <p className="text-sm text-muted-foreground">Request Number</p>
+                  <p className="font-mono font-medium text-primary">{selectedRequest.requestNumber}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
@@ -284,17 +246,50 @@ export default function CustomerRequests() {
                   <p className="text-sm text-muted-foreground">Preferred Date</p>
                   <p className="font-medium">{new Date(selectedRequest.preferredDate).toLocaleDateString()}</p>
                 </div>
-                <div className="col-span-2">
-                  <p className="text-sm text-muted-foreground">Requested On</p>
-                  <p className="font-medium">{new Date(selectedRequest.createdAt).toLocaleString()}</p>
-                </div>
-                {selectedRequest.remarks && (
-                  <div className="col-span-2">
-                    <p className="text-sm text-muted-foreground">Remarks</p>
-                    <p className="font-medium">{selectedRequest.remarks}</p>
-                  </div>
-                )}
               </div>
+              
+              <div className="border-t pt-4">
+                <h4 className="font-semibold mb-3">Cargo Details</h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Description</p>
+                    <p className="font-medium">{selectedRequest.cargoDescription}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Weight</p>
+                    <p className="font-medium">{selectedRequest.cargoWeight.toLocaleString()} kg</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Hazardous</p>
+                    <p className="font-medium">{selectedRequest.isHazardous ? 'Yes' : 'No'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {selectedRequest.allocatedContainer && (
+                <div className="border-t pt-4">
+                  <h4 className="font-semibold mb-3">Container Allocation</h4>
+                  <div className="flex items-center gap-3 p-3 bg-success/10 rounded-lg">
+                    <Container className="h-5 w-5 text-success" />
+                    <div>
+                      <p className="font-mono font-medium">{selectedRequest.allocatedContainer}</p>
+                      <p className="text-sm text-muted-foreground">Container allocated by terminal</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="border-t pt-4">
+                <p className="text-sm text-muted-foreground">Requested On</p>
+                <p className="font-medium">{new Date(selectedRequest.createdAt).toLocaleString()}</p>
+              </div>
+
+              {selectedRequest.remarks && (
+                <div>
+                  <p className="text-sm text-muted-foreground">Remarks</p>
+                  <p className="font-medium">{selectedRequest.remarks}</p>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
