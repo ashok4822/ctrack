@@ -16,6 +16,7 @@ import {
   UserCircle,
   PackagePlus,
   Navigation,
+  ListChecks,
 } from 'lucide-react';
 
 export const adminNavItems: NavItem[] = [
@@ -55,6 +56,7 @@ export const customerNavItems: NavItem[] = [
   { title: 'Stuffing / Destuffing', href: '/customer/stuffing', icon: Package },
   { title: 'Transit Tracking', href: '/customer/transit', icon: Navigation },
   { title: 'Movements', href: '/customer/movements', icon: Truck },
-  { title: 'Requests', href: '/customer/requests', icon: CheckSquare },
+  { title: 'Requests Listing', href: '/customer/requests', icon: ListChecks },
+  { title: 'Bills', href: '/customer/bills', icon: Receipt },
   { title: 'Profile', href: '/customer/profile', icon: UserCircle },
 ];

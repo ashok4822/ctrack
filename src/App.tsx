@@ -47,6 +47,9 @@ import CustomerStuffingDestuffing from "./pages/customer/StuffingDestuffing";
 import CustomerTransitTracking from "./pages/customer/TransitTracking";
 import CustomerMovements from "./pages/customer/Movements";
 import CustomerRequests from "./pages/customer/Requests";
+import CustomerBills from "./pages/customer/Bills";
+import CustomerPayment from "./pages/customer/Payment";
+import CustomerPaymentConfirmation from "./pages/customer/PaymentConfirmation";
 import CustomerProfile from "./pages/customer/Profile";
 
 import NotFound from "./pages/NotFound";
@@ -105,6 +108,9 @@ const App = () => (
             <Route path="/customer/transit" element={<CustomerTransitTracking />} />
             <Route path="/customer/movements" element={<CustomerMovements />} />
             <Route path="/customer/requests" element={<CustomerRequests />} />
+            <Route path="/customer/bills" element={<CustomerBills />} />
+            <Route path="/customer/payment/:billId" element={<CustomerPayment />} />
+            <Route path="/customer/payment-confirmation/:billId" element={<CustomerPaymentConfirmation />} />
             <Route path="/customer/profile" element={<CustomerProfile />} />
 
             {/* Catch-all */}
