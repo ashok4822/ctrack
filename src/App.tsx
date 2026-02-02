@@ -42,7 +42,9 @@ import OperatorProfile from "./pages/terminal/operator/Profile";
 // Customer Pages
 import CustomerDashboard from "./pages/customer/CustomerDashboard";
 import CustomerMyContainers from "./pages/customer/MyContainers";
+import CustomerRequestContainer from "./pages/customer/RequestContainer";
 import CustomerStuffingDestuffing from "./pages/customer/StuffingDestuffing";
+import CustomerTransitTracking from "./pages/customer/TransitTracking";
 import CustomerMovements from "./pages/customer/Movements";
 import CustomerRequests from "./pages/customer/Requests";
 import CustomerProfile from "./pages/customer/Profile";
@@ -98,7 +100,9 @@ const App = () => (
             <Route path="/customer/login" element={<CustomerLogin />} />
             <Route path="/customer/dashboard" element={<CustomerDashboard />} />
             <Route path="/customer/containers" element={<CustomerMyContainers />} />
+            <Route path="/customer/request-container" element={<CustomerRequestContainer />} />
             <Route path="/customer/stuffing" element={<CustomerStuffingDestuffing />} />
+            <Route path="/customer/transit" element={<CustomerTransitTracking />} />
             <Route path="/customer/movements" element={<CustomerMovements />} />
             <Route path="/customer/requests" element={<CustomerRequests />} />
             <Route path="/customer/profile" element={<CustomerProfile />} />

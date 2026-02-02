@@ -257,6 +257,41 @@ export interface ChartDataPoint {
   [key: string]: string | number | undefined;
 }
 
+// Transit Checkpoint Types
+export interface TransitCheckpoint {
+  id: string;
+  containerId: string;
+  containerNumber: string;
+  checkpointName: string;
+  location: string;
+  arrivedAt: string;
+  departedAt?: string;
+  status: 'pending' | 'in-transit' | 'completed';
+  remarks?: string;
+}
+
+// Container Request Types
+export interface ContainerRequest {
+  id: string;
+  type: 'stuffing' | 'destuffing';
+  customerId: string;
+  customerName: string;
+  containerId?: string;
+  containerNumber?: string;
+  containerSize?: string;
+  containerType?: string;
+  cargoDescription: string;
+  cargoWeight: number;
+  isHazardous: boolean;
+  hazardClass?: string;
+  unNumber?: string;
+  packingGroup?: string;
+  preferredDate: string;
+  status: 'pending' | 'approved' | 'rejected' | 'in-progress' | 'completed';
+  createdAt: string;
+  remarks?: string;
+}
+
 // Navigation Types
 export interface NavItem {
   title: string;
