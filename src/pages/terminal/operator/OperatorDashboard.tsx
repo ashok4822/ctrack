@@ -136,25 +136,25 @@ export default function OperatorDashboard() {
       {/* Quick Actions */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Button asChild variant="outline" className="h-auto p-4 flex-col gap-2">
-          <Link to="/terminal/operator/gate">
+          <Link to="/operator/gate">
             <DoorOpen className="h-6 w-6 text-success" />
             <span>Process Gate-In</span>
           </Link>
         </Button>
         <Button asChild variant="outline" className="h-auto p-4 flex-col gap-2">
-          <Link to="/terminal/operator/gate">
+          <Link to="/operator/gate">
             <DoorOpen className="h-6 w-6 text-primary" />
             <span>Process Gate-Out</span>
           </Link>
         </Button>
         <Button asChild variant="outline" className="h-auto p-4 flex-col gap-2">
-          <Link to="/terminal/operator/yard">
+          <Link to="/operator/yard">
             <Container className="h-6 w-6 text-warning" />
             <span>Yard Operations</span>
           </Link>
         </Button>
         <Button asChild variant="outline" className="h-auto p-4 flex-col gap-2">
-          <Link to="/terminal/operator/lookup">
+          <Link to="/operator/lookup">
             <Container className="h-6 w-6 text-muted-foreground" />
             <span>Container Lookup</span>
           </Link>
@@ -361,7 +361,7 @@ export default function OperatorDashboard() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-semibold">Task Queue</CardTitle>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/terminal/operator/tasks">
+              <Link to="/operator/tasks">
                 View All <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
@@ -398,7 +398,7 @@ export default function OperatorDashboard() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-semibold">Pending Gate Operations</CardTitle>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/terminal/operator/gate">
+              <Link to="/operator/gate">
                 View All <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>

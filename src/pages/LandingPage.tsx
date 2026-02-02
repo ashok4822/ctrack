@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Building2,
-  Ship,
   Factory,
   Container,
   ArrowRight,
@@ -16,20 +15,11 @@ const userTypes = [
   {
     id: 'terminal',
     title: 'Terminal Users',
-    description: 'Admin, Manager, Operator, and Surveyor access for terminal operations',
+    description: 'Admin and Operator access for terminal operations',
     icon: Building2,
     href: '/terminal/login',
     color: 'bg-primary/10 text-primary',
     features: ['Full yard management', 'Gate operations', 'Equipment tracking', 'Reports & analytics'],
-  },
-  {
-    id: 'shipping-line',
-    title: 'Shipping Line',
-    description: 'Track and manage your shipping line containers',
-    icon: Ship,
-    href: '/shipping-line/login',
-    color: 'bg-info/10 text-info',
-    features: ['Container tracking', 'Nominations', 'Bills & payments', 'Movement history'],
   },
   {
     id: 'customer',
@@ -145,7 +135,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
             {userTypes.map((type, index) => {
               const Icon = type.icon;
               return (

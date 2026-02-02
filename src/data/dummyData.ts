@@ -16,14 +16,11 @@ import type {
   User,
 } from '@/types';
 
-// Users
+// Users - Only 3 types: Admin, Operator, Customer
 export const dummyUsers: User[] = [
   { id: '1', name: 'John Admin', email: 'admin@ctrack.com', type: 'terminal', role: 'admin', avatar: '' },
-  { id: '2', name: 'Sarah Manager', email: 'manager@ctrack.com', type: 'terminal', role: 'manager', avatar: '' },
-  { id: '3', name: 'Mike Operator', email: 'operator@ctrack.com', type: 'terminal', role: 'operator', avatar: '' },
-  { id: '4', name: 'Lisa Surveyor', email: 'surveyor@ctrack.com', type: 'terminal', role: 'surveyor', avatar: '' },
-  { id: '5', name: 'Maersk User', email: 'user@maersk.com', type: 'shipping-line', organization: 'Maersk Line', avatar: '' },
-  { id: '6', name: 'ABC Factory', email: 'user@abcfactory.com', type: 'customer', organization: 'ABC Manufacturing', avatar: '' },
+  { id: '2', name: 'Mike Operator', email: 'operator@ctrack.com', type: 'terminal', role: 'operator', avatar: '' },
+  { id: '3', name: 'ABC Factory', email: 'user@abcfactory.com', type: 'customer', organization: 'ABC Manufacturing', avatar: '' },
 ];
 
 // Containers
@@ -157,8 +154,8 @@ export const dummySurveys: Survey[] = [
     id: '1',
     containerId: '4',
     containerNumber: 'EITU5432109',
-    surveyorId: '4',
-    surveyorName: 'Lisa Surveyor',
+    surveyorId: '1',
+    surveyorName: 'John Admin',
     status: 'pending',
     priority: 'urgent',
     location: 'Block C',
@@ -168,8 +165,8 @@ export const dummySurveys: Survey[] = [
     id: '2',
     containerId: '1',
     containerNumber: 'MSCU1234567',
-    surveyorId: '4',
-    surveyorName: 'Lisa Surveyor',
+    surveyorId: '1',
+    surveyorName: 'John Admin',
     status: 'completed',
     priority: 'normal',
     location: 'Block A',
@@ -189,8 +186,8 @@ export const dummySurveys: Survey[] = [
     id: '3',
     containerId: '3',
     containerNumber: 'CMAU9876543',
-    surveyorId: '4',
-    surveyorName: 'Lisa Surveyor',
+    surveyorId: '1',
+    surveyorName: 'John Admin',
     status: 'in-progress',
     priority: 'normal',
     location: 'Block B',
@@ -203,7 +200,7 @@ export const dummyGateOperations: GateOperation[] = [
   { id: '1', type: 'gate-in', containerId: '8', containerNumber: 'YMLU4455667', vehicleNumber: 'TN-01-AB-1234', driverName: 'Ramesh Kumar', purpose: 'factory', status: 'completed', timestamp: '2024-01-21T08:00:00Z' },
   { id: '2', type: 'gate-out', containerId: '2', containerNumber: 'HLCU7654321', vehicleNumber: 'TN-02-CD-5678', driverName: 'Suresh Patel', purpose: 'port', status: 'pending', timestamp: '2024-01-21T10:30:00Z' },
   { id: '3', type: 'gate-in', containerId: '1', containerNumber: 'MSCU1234567', vehicleNumber: 'TN-01-AB-1234', driverName: 'Ramesh Kumar', purpose: 'port', status: 'completed', timestamp: '2024-01-20T08:30:00Z' },
-  { id: '4', type: 'gate-out', containerId: '5', containerNumber: 'OOLU3210987', vehicleNumber: 'TN-03-EF-9012', driverName: 'Vijay Singh', purpose: 'factory', status: 'approved', timestamp: '2024-01-21T11:00:00Z', approvedBy: 'Sarah Manager' },
+  { id: '4', type: 'gate-out', containerId: '5', containerNumber: 'OOLU3210987', vehicleNumber: 'TN-03-EF-9012', driverName: 'Vijay Singh', purpose: 'factory', status: 'approved', timestamp: '2024-01-21T11:00:00Z', approvedBy: 'John Admin' },
 ];
 
 // Stuffing Operations
@@ -300,7 +297,7 @@ export const dummyApprovals: Approval[] = [
     type: 'damage-clearance',
     requestId: '1',
     status: 'pending',
-    requestedBy: 'Lisa Surveyor',
+    requestedBy: 'Mike Operator',
     requestedAt: '2024-01-21T09:15:00Z',
     details: { containerNumber: 'EITU5432109', damageType: 'Roof dent', recommendation: 'Minor repair' },
   },
@@ -311,7 +308,7 @@ export const dummyApprovals: Approval[] = [
     status: 'approved',
     requestedBy: 'Mike Operator',
     requestedAt: '2024-01-20T16:00:00Z',
-    approvedBy: 'Sarah Manager',
+    approvedBy: 'John Admin',
     approvedAt: '2024-01-20T17:00:00Z',
     details: { containerNumber: 'KKFU1122334', operation: 'Stuffing', location: 'Terminal' },
   },
@@ -319,16 +316,16 @@ export const dummyApprovals: Approval[] = [
 
 // Audit Logs
 export const dummyAuditLogs: AuditLog[] = [
-  { id: '1', userId: '3', userName: 'Mike Operator', action: 'Gate In', module: 'Gate Operations', details: 'Container YMLU4455667 gate in completed', timestamp: '2024-01-21T08:00:00Z', ipAddress: '192.168.1.100' },
-  { id: '2', userId: '2', userName: 'Sarah Manager', action: 'Approval', module: 'Approvals', details: 'Approved stuffing request for KKFU1122334', timestamp: '2024-01-20T17:00:00Z', ipAddress: '192.168.1.101' },
-  { id: '3', userId: '4', userName: 'Lisa Surveyor', action: 'Survey Complete', module: 'Surveys', details: 'Completed survey for MSCU1234567', timestamp: '2024-01-20T15:30:00Z', ipAddress: '192.168.1.102' },
+  { id: '1', userId: '2', userName: 'Mike Operator', action: 'Gate In', module: 'Gate Operations', details: 'Container YMLU4455667 gate in completed', timestamp: '2024-01-21T08:00:00Z', ipAddress: '192.168.1.100' },
+  { id: '2', userId: '1', userName: 'John Admin', action: 'Approval', module: 'Approvals', details: 'Approved stuffing request for KKFU1122334', timestamp: '2024-01-20T17:00:00Z', ipAddress: '192.168.1.101' },
+  { id: '3', userId: '1', userName: 'John Admin', action: 'Survey Complete', module: 'Surveys', details: 'Completed survey for MSCU1234567', timestamp: '2024-01-20T15:30:00Z', ipAddress: '192.168.1.102' },
   { id: '4', userId: '1', userName: 'John Admin', action: 'User Created', module: 'User Management', details: 'Created new operator account', timestamp: '2024-01-19T10:00:00Z', ipAddress: '192.168.1.103' },
 ];
 
 // Notifications
 export const dummyNotifications: Notification[] = [
-  { id: '1', type: 'alert', title: 'Damaged Container', message: 'Container EITU5432109 reported with damage', read: false, timestamp: '2024-01-21T09:00:00Z', link: '/terminal/admin/containers/4' },
-  { id: '2', type: 'warning', title: 'Pending Approval', message: '3 gate-out requests pending approval', read: false, timestamp: '2024-01-21T10:30:00Z', link: '/terminal/admin/approvals' },
+  { id: '1', type: 'alert', title: 'Damaged Container', message: 'Container EITU5432109 reported with damage', read: false, timestamp: '2024-01-21T09:00:00Z', link: '/admin/containers/4' },
+  { id: '2', type: 'warning', title: 'Pending Approval', message: '3 gate-out requests pending approval', read: false, timestamp: '2024-01-21T10:30:00Z', link: '/admin/approvals' },
   { id: '3', type: 'info', title: 'Equipment Maintenance', message: 'Forklift FL-001 scheduled for maintenance', read: true, timestamp: '2024-01-20T16:00:00Z' },
   { id: '4', type: 'success', title: 'Payment Received', message: 'Payment of ₹10,000 received from CMA CGM', read: true, timestamp: '2024-01-21T08:00:00Z' },
 ];
@@ -432,22 +429,21 @@ export const dummyActivityCharges = [
 // Tasks
 export const dummyTasks = [
   { id: '1', type: 'gate-in', description: 'Process gate-in for NYKU8765432', status: 'pending', priority: 'normal', assignedTo: 'Mike Operator', createdAt: '2024-01-21T08:00:00Z' },
-  { id: '2', type: 'yard-shift', description: 'Shift MSCU1234567 to Block A, Row 02', status: 'in-progress', priority: 'normal', assignedTo: 'Mike Operator', createdAt: '2024-01-21T09:00:00Z' },
-  { id: '3', type: 'stuffing', description: 'Complete stuffing for KKFU1122334', status: 'pending', priority: 'urgent', assignedTo: 'Mike Operator', createdAt: '2024-01-21T07:00:00Z' },
-  { id: '4', type: 'equipment', description: 'Assign RS-001 to Block B operations', status: 'completed', priority: 'normal', assignedTo: 'Mike Operator', createdAt: '2024-01-21T06:00:00Z' },
+  { id: '2', type: 'stuffing', description: 'Complete stuffing for KKFU1122334', status: 'in-progress', priority: 'high', assignedTo: 'Mike Operator', createdAt: '2024-01-21T07:00:00Z' },
+  { id: '3', type: 'relocation', description: 'Move MSCU1234567 to Block A', status: 'pending', priority: 'normal', assignedTo: 'Mike Operator', createdAt: '2024-01-21T09:00:00Z' },
+  { id: '4', type: 'inspection', description: 'Pre-gate inspection for OOLU3210987', status: 'completed', priority: 'urgent', assignedTo: 'Mike Operator', createdAt: '2024-01-20T16:00:00Z' },
 ];
 
-// Container Nominations (Shipping Line)
+// Nominated Containers (for operator dashboard)
 export const dummyNominations = [
-  { id: '1', containerNumber: 'MSCU1234567', shippingLine: 'MSC', customer: 'ABC Manufacturing', factory: 'ABC Factory Chennai', location: 'Chennai', distance: '45 km', size: '40ft', type: 'standard', movementType: 'export', status: 'pending', nominatedAt: '2024-01-21T08:00:00Z', truckNumber: 'TN-01-AB-1234', driverName: 'Rajesh Kumar', driverPhone: '+91 9876543210' },
-  { id: '2', containerNumber: 'HLCU7654321', shippingLine: 'Hapag-Lloyd', customer: 'XYZ Foods', factory: 'XYZ Cold Storage', location: 'Bangalore', distance: '320 km', size: '20ft', type: 'reefer', movementType: 'import', status: 'pending', nominatedAt: '2024-01-20T14:00:00Z', truckNumber: 'KA-01-CD-5678', driverName: 'Suresh Babu', driverPhone: '+91 9876543211' },
-  { id: '3', containerNumber: 'NYKU8765432', shippingLine: 'NYK Line', customer: 'Delta Electronics', factory: 'Delta Assembly Unit', location: 'Hosur', distance: '65 km', size: '40ft', type: 'standard', movementType: 'export', status: 'approved', nominatedAt: '2024-01-19T10:00:00Z', truckNumber: 'TN-02-EF-9012', driverName: 'Vinod Sharma', driverPhone: '+91 9876543212', approvedAt: '2024-01-19T11:30:00Z', approvedBy: 'Mike Operator' },
-  { id: '4', containerNumber: 'KKFU1122334', shippingLine: 'Evergreen', customer: 'Global Textiles', factory: 'Global Spinning Mill', location: 'Coimbatore', distance: '180 km', size: '20ft', type: 'standard', movementType: 'domestic', status: 'pending', nominatedAt: '2024-01-21T06:30:00Z', truckNumber: 'TN-03-GH-3456', driverName: 'Arun Prasad', driverPhone: '+91 9876543213' },
-  { id: '5', containerNumber: 'MSKU5544332', shippingLine: 'Maersk', customer: 'Pharma Solutions', factory: 'Pharma Cold Chain', location: 'Oragadam', distance: '35 km', size: '40ft', type: 'reefer', movementType: 'import', status: 'rejected', nominatedAt: '2024-01-18T09:00:00Z', truckNumber: 'TN-04-IJ-7890', driverName: 'Karthik Raj', driverPhone: '+91 9876543214', rejectedAt: '2024-01-18T10:00:00Z', rejectedBy: 'Mike Operator', rejectionReason: 'Container not cleared by customs' },
+  { id: '1', containerNumber: 'MSCU1234567', shippingLine: 'Maersk Line', customer: 'ABC Manufacturing', factory: 'ABC Factory', location: 'Chennai Industrial Area', distance: '25 km', size: '40ft', type: 'standard', movementType: 'import', truckNumber: 'TN-01-AB-1234', driverName: 'Ramesh Kumar', driverPhone: '+91 98765 43210', status: 'pending', nominatedAt: '2024-01-21T08:30:00Z' },
+  { id: '2', containerNumber: 'HLCU7654321', shippingLine: 'Hapag-Lloyd', customer: 'XYZ Foods', factory: 'XYZ Processing Unit', location: 'Bangalore Industrial Zone', distance: '150 km', size: '20ft', type: 'reefer', movementType: 'export', truckNumber: 'TN-02-CD-5678', driverName: 'Suresh Patel', driverPhone: '+91 87654 32109', status: 'pending', nominatedAt: '2024-01-21T09:00:00Z' },
 ];
 
 // Customer Requests
 export const dummyCustomerRequests = [
-  { id: '1', type: 'stuffing', containerNumber: 'MSCU1234567', location: 'factory', preferredDate: '2024-01-25', status: 'pending', remarks: 'Please schedule in morning hours', createdAt: '2024-01-21T10:00:00Z' },
-  { id: '2', type: 'gate-out', containerNumber: 'HLCU7654321', location: 'terminal', preferredDate: '2024-01-22', status: 'approved', remarks: '', createdAt: '2024-01-20T15:00:00Z' },
+  { id: '1', type: 'stuffing', containerNumber: 'MSCU1234567', preferredDate: '2024-01-25T10:00:00Z', status: 'pending', createdAt: '2024-01-21T08:00:00Z', remarks: 'Need early morning slot' },
+  { id: '2', type: 'destuffing', containerNumber: 'HLCU7654321', preferredDate: '2024-01-24T14:00:00Z', status: 'approved', createdAt: '2024-01-20T09:00:00Z' },
+  { id: '3', type: 'movement', containerNumber: 'EITU5432109', preferredDate: '2024-01-26T08:00:00Z', status: 'rejected', createdAt: '2024-01-19T15:00:00Z', remarks: 'Container has damage - needs clearance first' },
+  { id: '4', type: 'inspection', containerNumber: 'OOLU3210987', preferredDate: '2024-01-23T11:00:00Z', status: 'pending', createdAt: '2024-01-21T10:00:00Z' },
 ];

@@ -62,7 +62,7 @@ export default function ContainerDetails() {
           <p className="text-muted-foreground mb-4">
             The container you're looking for doesn't exist.
           </p>
-          <Button onClick={() => navigate('/terminal/admin/containers')}>
+          <Button onClick={() => navigate('/admin/containers')}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Containers
           </Button>
@@ -139,7 +139,7 @@ export default function ContainerDetails() {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate('/terminal/admin/containers')}
+          onClick={() => navigate('/admin/containers')}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Container List
