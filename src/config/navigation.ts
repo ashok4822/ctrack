@@ -14,6 +14,8 @@ import {
   Settings,
   ScrollText,
   UserCircle,
+  PackagePlus,
+  Navigation,
 } from 'lucide-react';
 
 export const adminNavItems: NavItem[] = [
@@ -49,7 +51,9 @@ export const operatorNavItems: NavItem[] = [
 export const customerNavItems: NavItem[] = [
   { title: 'Dashboard', href: '/customer/dashboard', icon: LayoutDashboard },
   { title: 'My Containers', href: '/customer/containers', icon: Container },
+  { title: 'Request Container', href: '/customer/request-container', icon: PackagePlus },
   { title: 'Stuffing / Destuffing', href: '/customer/stuffing', icon: Package },
+  { title: 'Transit Tracking', href: '/customer/transit', icon: Navigation },
   { title: 'Movements', href: '/customer/movements', icon: Truck },
   { title: 'Requests', href: '/customer/requests', icon: CheckSquare },
   { title: 'Profile', href: '/customer/profile', icon: UserCircle },
