@@ -1,6 +1,6 @@
 // User Types
-export type UserRole = 'admin' | 'manager' | 'operator' | 'surveyor';
-export type UserType = 'terminal' | 'shipping-line' | 'customer';
+export type UserRole = 'admin' | 'operator';
+export type UserType = 'terminal' | 'customer';
 
 export interface User {
   id: string;

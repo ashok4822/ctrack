@@ -47,7 +47,6 @@ export function Header({ onMenuToggle, isSidebarOpen }: HeaderProps) {
     if (user.type === 'terminal' && user.role) {
       return user.role.charAt(0).toUpperCase() + user.role.slice(1);
     }
-    if (user.type === 'shipping-line') return 'Shipping Line';
     if (user.type === 'customer') return 'Customer';
     return '';
   };

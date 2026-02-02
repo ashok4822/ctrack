@@ -91,7 +91,7 @@ export default function ContainerList() {
         data={dummyContainers}
         columns={columns}
         searchPlaceholder="Search containers..."
-        onRowClick={(item) => navigate(`/terminal/admin/containers/${item.id}`)}
+        onRowClick={(item) => navigate(`/admin/containers/${item.id}`)}
       />
 
       <AddContainerDialog

@@ -15,35 +15,21 @@ import {
   Eye,
   EyeOff,
   Shield,
-  Users,
   Wrench,
-  ClipboardCheck,
 } from 'lucide-react';
 
 const roles: { value: UserRole; label: string; description: string; icon: typeof Shield }[] = [
   {
     value: 'admin',
     label: 'Administrator',
-    description: 'Full system access and configuration',
+    description: 'Full system access, configuration, and oversight',
     icon: Shield,
-  },
-  {
-    value: 'manager',
-    label: 'Manager',
-    description: 'Operations monitoring and approvals',
-    icon: Users,
   },
   {
     value: 'operator',
     label: 'Operator',
     description: 'Daily operations and task execution',
     icon: Wrench,
-  },
-  {
-    value: 'surveyor',
-    label: 'Surveyor',
-    description: 'Container inspection and damage reports',
-    icon: ClipboardCheck,
   },
 ];
 
@@ -63,16 +49,10 @@ export default function TerminalLogin() {
     // Navigate to appropriate dashboard based on role
     switch (selectedRole) {
       case 'admin':
-        navigate('/terminal/admin/dashboard');
-        break;
-      case 'manager':
-        navigate('/terminal/manager/dashboard');
+        navigate('/admin/dashboard');
         break;
       case 'operator':
-        navigate('/terminal/operator/dashboard');
-        break;
-      case 'surveyor':
-        navigate('/terminal/surveyor/dashboard');
+        navigate('/operator/dashboard');
         break;
     }
   };
