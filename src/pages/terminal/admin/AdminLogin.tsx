@@ -1,4 +1,3 @@
-// Terminal Operator Login Page
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -7,9 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { ForgotPasswordDialog } from '@/components/auth/ForgotPasswordDialog';
-import { Building2, ChevronLeft, Eye, EyeOff } from 'lucide-react';
+import { ChevronLeft, Eye, EyeOff, Shield } from 'lucide-react';
 
-export default function TerminalLogin() {
+export default function AdminLogin() {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
@@ -19,12 +18,12 @@ export default function TerminalLogin() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    login('terminal', 'operator');
-    navigate('/operator/dashboard');
+    login('terminal', 'admin');
+    navigate('/admin/dashboard');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-warning/5 via-background to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
       {/* Header */}
       <header className="border-b bg-card/95 backdrop-blur">
         <div className="container flex h-16 items-center">
@@ -42,12 +41,12 @@ export default function TerminalLogin() {
       <div className="container flex min-h-[calc(100vh-4rem)] items-center justify-center py-12">
         <Card className="w-full max-w-md animate-fade-in">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-warning/10">
-              <Building2 className="h-8 w-8 text-warning" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
+              <Shield className="h-8 w-8 text-primary" />
             </div>
-            <CardTitle className="text-2xl">Operator Login</CardTitle>
+            <CardTitle className="text-2xl">Admin Login</CardTitle>
             <CardDescription>
-              Sign in to access terminal operations dashboard
+              Sign in to access the administrator dashboard
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -58,7 +57,7 @@ export default function TerminalLogin() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="operator@ctrack.com"
+                  placeholder="admin@ctrack.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -96,7 +95,7 @@ export default function TerminalLogin() {
                 <Button
                   type="button"
                   variant="link"
-                  className="h-auto p-0 text-sm text-muted-foreground hover:text-warning"
+                  className="h-auto p-0 text-sm text-muted-foreground hover:text-primary"
                   onClick={() => setForgotPasswordOpen(true)}
                 >
                   Forgot Password?
@@ -104,8 +103,8 @@ export default function TerminalLogin() {
               </div>
 
               {/* Submit */}
-              <Button type="submit" className="w-full bg-warning text-warning-foreground hover:bg-warning/90" size="lg">
-                Sign In as Operator
+              <Button type="submit" className="w-full" size="lg">
+                Sign In as Administrator
               </Button>
 
               {/* Demo Note */}
@@ -121,7 +120,7 @@ export default function TerminalLogin() {
       <ForgotPasswordDialog
         open={forgotPasswordOpen}
         onOpenChange={setForgotPasswordOpen}
-        accentColor="warning"
+        accentColor="primary"
       />
     </div>
   );

@@ -17,6 +17,7 @@ import {
   PackagePlus,
   Navigation,
   ListChecks,
+  Boxes,
 } from 'lucide-react';
 
 export const adminNavItems: NavItem[] = [
@@ -40,6 +41,7 @@ export const operatorNavItems: NavItem[] = [
   { title: 'Dashboard', href: '/operator/dashboard', icon: LayoutDashboard },
   { title: 'Gate Operations', href: '/operator/gate', icon: DoorOpen },
   { title: 'Yard Operations', href: '/operator/yard', icon: MapPin },
+  { title: 'Cargo Requests', href: '/operator/cargo-requests', icon: Boxes },
   { title: 'Stuffing / Destuffing', href: '/operator/stuffing', icon: Package },
   { title: 'Equipment & Vehicles', href: '/operator/equipment', icon: Truck },
   { title: 'Container Lookup', href: '/operator/lookup', icon: Container },

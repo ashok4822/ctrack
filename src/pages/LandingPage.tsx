@@ -13,13 +13,22 @@ import {
 
 const userTypes = [
   {
-    id: 'terminal',
-    title: 'Terminal Users',
-    description: 'Admin and Operator access for terminal operations',
+    id: 'admin',
+    title: 'Administrator',
+    description: 'Full system access and configuration',
+    icon: Shield,
+    href: '/admin/login',
+    color: 'bg-primary/10 text-primary',
+    features: ['System configuration', 'User management', 'Reports & analytics', 'Approval workflows'],
+  },
+  {
+    id: 'operator',
+    title: 'Terminal Operator',
+    description: 'Day-to-day terminal operations management',
     icon: Building2,
     href: '/terminal/login',
-    color: 'bg-primary/10 text-primary',
-    features: ['Full yard management', 'Gate operations', 'Equipment tracking', 'Reports & analytics'],
+    color: 'bg-warning/10 text-warning',
+    features: ['Gate operations', 'Yard management', 'Cargo requests', 'Equipment tracking'],
   },
   {
     id: 'customer',
@@ -28,7 +37,7 @@ const userTypes = [
     icon: Factory,
     href: '/customer/login',
     color: 'bg-success/10 text-success',
-    features: ['Container status', 'Stuffing requests', 'Movement tracking', 'Request management'],
+    features: ['Container status', 'Stuffing requests', 'Movement tracking', 'Bill payments'],
   },
 ];
 
@@ -135,7 +144,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto">
+          <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
             {userTypes.map((type, index) => {
               const Icon = type.icon;
               return (

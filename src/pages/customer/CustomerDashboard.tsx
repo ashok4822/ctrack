@@ -4,6 +4,7 @@ import { customerNavItems } from '@/config/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/common/StatusBadge';
+import { SupportChatbot } from '@/components/customer/SupportChatbot';
 import {
   Container,
   Truck,
@@ -188,6 +189,9 @@ export default function CustomerDashboard() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Support Chatbot */}
+      <SupportChatbot />
     </DashboardLayout>
   );
 }
