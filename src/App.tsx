@@ -10,7 +10,8 @@ import LandingPage from "./pages/LandingPage";
 import TerminalLogin from "./pages/terminal/TerminalLogin";
 import CustomerLogin from "./pages/customer/CustomerLogin";
 
-// Admin Pages (formerly Terminal Admin)
+// Admin Pages
+import AdminLogin from "./pages/terminal/admin/AdminLogin";
 import AdminDashboard from "./pages/terminal/admin/AdminDashboard";
 import ContainerList from "./pages/terminal/admin/ContainerList";
 import ContainerDetails from "./pages/terminal/admin/ContainerDetails";
@@ -38,6 +39,7 @@ import OperatorTasks from "./pages/terminal/operator/Tasks";
 import OperatorBilling from "./pages/terminal/operator/Billing";
 import OperatorPDAView from "./pages/terminal/operator/PDAView";
 import OperatorProfile from "./pages/terminal/operator/Profile";
+import OperatorCargoRequests from "./pages/terminal/operator/CargoRequests";
 
 // Customer Pages
 import CustomerDashboard from "./pages/customer/CustomerDashboard";
@@ -67,10 +69,11 @@ const App = () => (
             {/* Landing */}
             <Route path="/" element={<LandingPage />} />
 
-            {/* Terminal Login */}
+            {/* Terminal Operator Login */}
             <Route path="/terminal/login" element={<TerminalLogin />} />
 
-            {/* Admin Routes */}
+            {/* Admin Login & Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/containers" element={<ContainerList />} />
             <Route path="/admin/containers/:id" element={<ContainerDetails />} />
@@ -98,6 +101,7 @@ const App = () => (
             <Route path="/operator/billing" element={<OperatorBilling />} />
             <Route path="/operator/pda" element={<OperatorPDAView />} />
             <Route path="/operator/profile" element={<OperatorProfile />} />
+            <Route path="/operator/cargo-requests" element={<OperatorCargoRequests />} />
 
             {/* Customer Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />

@@ -440,10 +440,66 @@ export const dummyNominations = [
   { id: '2', containerNumber: 'HLCU7654321', shippingLine: 'Hapag-Lloyd', customer: 'XYZ Foods', factory: 'XYZ Processing Unit', location: 'Bangalore Industrial Zone', distance: '150 km', size: '20ft', type: 'reefer', movementType: 'export', truckNumber: 'TN-02-CD-5678', driverName: 'Suresh Patel', driverPhone: '+91 87654 32109', status: 'pending', nominatedAt: '2024-01-21T09:00:00Z' },
 ];
 
-// Customer Requests
-export const dummyCustomerRequests = [
-  { id: '1', type: 'stuffing', containerNumber: 'MSCU1234567', preferredDate: '2024-01-25T10:00:00Z', status: 'pending', createdAt: '2024-01-21T08:00:00Z', remarks: 'Need early morning slot' },
-  { id: '2', type: 'destuffing', containerNumber: 'HLCU7654321', preferredDate: '2024-01-24T14:00:00Z', status: 'approved', createdAt: '2024-01-20T09:00:00Z' },
-  { id: '3', type: 'movement', containerNumber: 'EITU5432109', preferredDate: '2024-01-26T08:00:00Z', status: 'rejected', createdAt: '2024-01-19T15:00:00Z', remarks: 'Container has damage - needs clearance first' },
-  { id: '4', type: 'inspection', containerNumber: 'OOLU3210987', preferredDate: '2024-01-23T11:00:00Z', status: 'pending', createdAt: '2024-01-21T10:00:00Z' },
+// Customer Requests (ContainerRequest type)
+export const dummyCustomerRequests: import('@/types').ContainerRequest[] = [
+  { 
+    id: '1', 
+    type: 'stuffing', 
+    customerId: '3', 
+    customerName: 'ABC Manufacturing', 
+    cargoDescription: 'Electronic components and circuit boards',
+    cargoWeight: 18000,
+    isHazardous: false,
+    preferredDate: '2024-01-25T10:00:00Z', 
+    status: 'pending', 
+    createdAt: '2024-01-21T08:00:00Z', 
+    remarks: 'Need early morning slot' 
+  },
+  { 
+    id: '2', 
+    type: 'destuffing', 
+    customerId: '3', 
+    customerName: 'ABC Manufacturing', 
+    containerId: '2',
+    containerNumber: 'HLCU7654321',
+    containerSize: '20ft',
+    containerType: 'reefer',
+    cargoDescription: 'Frozen food products - temperature controlled',
+    cargoWeight: 15000,
+    isHazardous: false,
+    preferredDate: '2024-01-24T14:00:00Z', 
+    status: 'approved', 
+    createdAt: '2024-01-20T09:00:00Z' 
+  },
+  { 
+    id: '3', 
+    type: 'stuffing', 
+    customerId: '4', 
+    customerName: 'Chemical Corp', 
+    cargoDescription: 'Industrial chemicals - Class 8 Corrosive',
+    cargoWeight: 22000,
+    isHazardous: true,
+    hazardClass: '8',
+    unNumber: '1789',
+    packingGroup: 'II',
+    preferredDate: '2024-01-26T08:00:00Z', 
+    status: 'pending', 
+    createdAt: '2024-01-19T15:00:00Z'
+  },
+  { 
+    id: '4', 
+    type: 'destuffing', 
+    customerId: '5', 
+    customerName: 'Global Traders', 
+    containerId: '1',
+    containerNumber: 'MSCU1234567',
+    containerSize: '40ft',
+    containerType: 'standard',
+    cargoDescription: 'Textile machinery and spare parts',
+    cargoWeight: 25000,
+    isHazardous: false,
+    preferredDate: '2024-01-23T11:00:00Z', 
+    status: 'in-progress', 
+    createdAt: '2024-01-21T10:00:00Z' 
+  },
 ];

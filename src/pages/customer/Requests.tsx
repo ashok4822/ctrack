@@ -6,55 +6,36 @@ import { KPICard } from '@/components/common/KPICard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { SupportChatbot } from '@/components/customer/SupportChatbot';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { FileText, Clock, CheckCircle, XCircle, Eye, Container, Package } from 'lucide-react';
-import { dummyCustomerRequests, dummyContainers } from '@/data/dummyData';
+import { FileText, Clock, CheckCircle, XCircle, Eye, Container, Package, AlertTriangle } from 'lucide-react';
+import { dummyCustomerRequests } from '@/data/dummyData';
+import type { ContainerRequest } from '@/types';
 import { useState } from 'react';
 
-interface CustomerRequest {
-  id: string;
-  requestNumber: string;
-  type: string;
-  containerNumber?: string;
-  cargoDescription: string;
-  cargoWeight: number;
-  isHazardous: boolean;
-  preferredDate: string;
-  status: string;
-  remarks?: string;
-  createdAt: string;
-  allocatedContainer?: string;
-}
-
 export default function CustomerRequests() {
-  const [selectedRequest, setSelectedRequest] = useState<CustomerRequest | null>(null);
+  const [selectedRequest, setSelectedRequest] = useState<ContainerRequest | null>(null);
   
-  // Map dummy data to include more details
-  const requests: CustomerRequest[] = dummyCustomerRequests.map((r, index) => ({
-    ...r,
-    requestNumber: `REQ-2024-${String(index + 1).padStart(3, '0')}`,
-    cargoDescription: r.type === 'stuffing' ? 'Industrial Machinery Parts' : 'Electronic Components',
-    cargoWeight: r.type === 'stuffing' ? 18500 : 12000,
-    isHazardous: false,
-    allocatedContainer: r.status === 'approved' ? r.containerNumber : undefined,
-  }));
+  const requests = dummyCustomerRequests;
 
   const pendingRequests = requests.filter(r => r.status === 'pending').length;
   const approvedRequests = requests.filter(r => r.status === 'approved').length;
-  const rejectedRequests = requests.filter(r => r.status === 'rejected').length;
+  const inProgressRequests = requests.filter(r => r.status === 'in-progress').length;
+  const completedRequests = requests.filter(r => r.status === 'completed').length;
 
-  const columns: Column<CustomerRequest>[] = [
+  const columns: Column<ContainerRequest>[] = [
     {
-      key: 'requestNumber',
+      key: 'id',
       header: 'Request No.',
       sortable: true,
       render: (item) => (
-        <span className="font-mono font-medium text-primary">{item.requestNumber}</span>
+        <span className="font-mono font-medium text-primary">REQ-{item.id.slice(0, 6)}</span>
       ),
     },
     {
@@ -62,18 +43,18 @@ export default function CustomerRequests() {
       header: 'Type',
       sortable: true,
       render: (item) => (
-        <div className="flex items-center gap-2">
-          <Package className="h-4 w-4 text-muted-foreground" />
-          <span className="capitalize font-medium">{item.type}</span>
-        </div>
+        <Badge variant={item.type === 'stuffing' ? 'default' : 'secondary'} className="capitalize">
+          {item.type}
+        </Badge>
       ),
     },
     {
       key: 'cargoDescription',
       header: 'Cargo Description',
-      sortable: true,
       render: (item) => (
-        <span className="text-sm">{item.cargoDescription}</span>
+        <div className="max-w-[200px] truncate" title={item.cargoDescription}>
+          {item.cargoDescription}
+        </div>
       ),
     },
     {
@@ -85,13 +66,24 @@ export default function CustomerRequests() {
       ),
     },
     {
-      key: 'allocatedContainer',
+      key: 'isHazardous',
+      header: 'Hazardous',
+      render: (item) => item.isHazardous ? (
+        <Badge variant="destructive" className="gap-1">
+          <AlertTriangle className="h-3 w-3" />
+          Yes
+        </Badge>
+      ) : (
+        <span className="text-muted-foreground">No</span>
+      ),
+    },
+    {
+      key: 'containerNumber',
       header: 'Allocated Container',
-      sortable: true,
-      render: (item) => item.allocatedContainer ? (
+      render: (item) => item.containerNumber ? (
         <div className="flex items-center gap-2">
           <Container className="h-4 w-4 text-success" />
-          <span className="font-mono text-sm">{item.allocatedContainer}</span>
+          <span className="font-mono text-sm">{item.containerNumber}</span>
         </div>
       ) : (
         <span className="text-muted-foreground text-sm">Not allocated</span>
@@ -133,7 +125,7 @@ export default function CustomerRequests() {
       pageTitle="Requests Listing"
     >
       {/* KPI Cards */}
-      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <KPICard
           title="Total Requests"
           value={requests.length}
@@ -153,10 +145,14 @@ export default function CustomerRequests() {
           variant="success"
         />
         <KPICard
-          title="Rejected"
-          value={rejectedRequests}
-          icon={XCircle}
-          variant="danger"
+          title="In Progress"
+          value={inProgressRequests}
+          icon={Package}
+        />
+        <KPICard
+          title="Completed"
+          value={completedRequests}
+          icon={CheckCircle}
         />
       </div>
 
@@ -169,9 +165,9 @@ export default function CustomerRequests() {
           <Tabs defaultValue="all">
             <TabsList className="mb-4">
               <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="approved">Approved</TabsTrigger>
-              <TabsTrigger value="rejected">Rejected</TabsTrigger>
+              <TabsTrigger value="pending">Pending ({pendingRequests})</TabsTrigger>
+              <TabsTrigger value="approved">Approved ({approvedRequests})</TabsTrigger>
+              <TabsTrigger value="in-progress">In Progress ({inProgressRequests})</TabsTrigger>
             </TabsList>
             
             <TabsContent value="all">
@@ -179,7 +175,7 @@ export default function CustomerRequests() {
                 data={requests}
                 columns={columns}
                 searchable
-                searchPlaceholder="Search by request number, cargo..."
+                searchPlaceholder="Search by cargo description..."
                 onRowClick={setSelectedRequest}
                 emptyMessage="No requests found"
               />
@@ -189,8 +185,6 @@ export default function CustomerRequests() {
               <DataTable
                 data={requests.filter(r => r.status === 'pending')}
                 columns={columns}
-                searchable
-                searchPlaceholder="Search pending requests..."
                 onRowClick={setSelectedRequest}
                 emptyMessage="No pending requests"
               />
@@ -200,21 +194,17 @@ export default function CustomerRequests() {
               <DataTable
                 data={requests.filter(r => r.status === 'approved')}
                 columns={columns}
-                searchable
-                searchPlaceholder="Search approved requests..."
                 onRowClick={setSelectedRequest}
                 emptyMessage="No approved requests"
               />
             </TabsContent>
             
-            <TabsContent value="rejected">
+            <TabsContent value="in-progress">
               <DataTable
-                data={requests.filter(r => r.status === 'rejected')}
+                data={requests.filter(r => r.status === 'in-progress')}
                 columns={columns}
-                searchable
-                searchPlaceholder="Search rejected requests..."
                 onRowClick={setSelectedRequest}
-                emptyMessage="No rejected requests"
+                emptyMessage="No in-progress requests"
               />
             </TabsContent>
           </Tabs>
@@ -231,8 +221,8 @@ export default function CustomerRequests() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-muted-foreground">Request Number</p>
-                  <p className="font-mono font-medium text-primary">{selectedRequest.requestNumber}</p>
+                  <p className="text-sm text-muted-foreground">Request ID</p>
+                  <p className="font-mono font-medium text-primary">REQ-{selectedRequest.id.slice(0, 6)}</p>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Status</p>
@@ -240,7 +230,9 @@ export default function CustomerRequests() {
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Type</p>
-                  <p className="font-medium capitalize">{selectedRequest.type}</p>
+                  <Badge variant={selectedRequest.type === 'stuffing' ? 'default' : 'secondary'} className="capitalize">
+                    {selectedRequest.type}
+                  </Badge>
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Preferred Date</p>
@@ -251,7 +243,7 @@ export default function CustomerRequests() {
               <div className="border-t pt-4">
                 <h4 className="font-semibold mb-3">Cargo Details</h4>
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
+                  <div className="col-span-2">
                     <p className="text-sm text-muted-foreground">Description</p>
                     <p className="font-medium">{selectedRequest.cargoDescription}</p>
                   </div>
@@ -261,19 +253,28 @@ export default function CustomerRequests() {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Hazardous</p>
-                    <p className="font-medium">{selectedRequest.isHazardous ? 'Yes' : 'No'}</p>
+                    {selectedRequest.isHazardous ? (
+                      <Badge variant="destructive" className="gap-1">
+                        <AlertTriangle className="h-3 w-3" />
+                        Yes - {selectedRequest.hazardClass}
+                      </Badge>
+                    ) : (
+                      <p className="font-medium">No</p>
+                    )}
                   </div>
                 </div>
               </div>
 
-              {selectedRequest.allocatedContainer && (
+              {selectedRequest.containerNumber && (
                 <div className="border-t pt-4">
                   <h4 className="font-semibold mb-3">Container Allocation</h4>
                   <div className="flex items-center gap-3 p-3 bg-success/10 rounded-lg">
                     <Container className="h-5 w-5 text-success" />
                     <div>
-                      <p className="font-mono font-medium">{selectedRequest.allocatedContainer}</p>
-                      <p className="text-sm text-muted-foreground">Container allocated by terminal</p>
+                      <p className="font-mono font-medium">{selectedRequest.containerNumber}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {selectedRequest.containerSize} • {selectedRequest.containerType}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -294,6 +295,9 @@ export default function CustomerRequests() {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Support Chatbot */}
+      <SupportChatbot />
     </DashboardLayout>
   );
 }
