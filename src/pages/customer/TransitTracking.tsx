@@ -20,140 +20,43 @@ import {
 } from '@/components/ui/dialog';
 import { DataTable, Column } from '@/components/common/DataTable';
 import { KPICard } from '@/components/common/KPICard';
-import { 
-  MapPin, 
-  Truck, 
-  Clock, 
-  CheckCircle, 
+import {
+  MapPin,
+  Truck,
+  Clock,
+  CheckCircle,
   Container,
   Navigation,
   Calendar,
   Eye,
 } from 'lucide-react';
-import { dummyContainers } from '@/data/dummyData';
+import { dummyContainers, dummyTransitCheckpoints, dummyTransitContainers } from '@/data/dummyData';
 import type { TransitCheckpoint } from '@/types';
-
-// Dummy transit data
-const dummyTransitCheckpoints: TransitCheckpoint[] = [
-  {
-    id: '1',
-    containerId: '1',
-    containerNumber: 'MSCU1234567',
-    checkpointName: 'Chennai Port',
-    location: 'Chennai, Tamil Nadu',
-    arrivedAt: '2024-01-20T08:30:00Z',
-    departedAt: '2024-01-20T10:00:00Z',
-    status: 'completed',
-    remarks: 'Cleared customs inspection',
-  },
-  {
-    id: '2',
-    containerId: '1',
-    containerNumber: 'MSCU1234567',
-    checkpointName: 'Toll Plaza - NH48',
-    location: 'Sriperumbudur, Tamil Nadu',
-    arrivedAt: '2024-01-20T11:30:00Z',
-    departedAt: '2024-01-20T11:45:00Z',
-    status: 'completed',
-    remarks: 'Toll paid',
-  },
-  {
-    id: '3',
-    containerId: '1',
-    containerNumber: 'MSCU1234567',
-    checkpointName: 'Weighbridge Station',
-    location: 'Oragadam, Tamil Nadu',
-    arrivedAt: '2024-01-20T12:30:00Z',
-    departedAt: '2024-01-20T12:50:00Z',
-    status: 'completed',
-    remarks: 'Weight verified: 25,000 kg',
-  },
-  {
-    id: '4',
-    containerId: '1',
-    containerNumber: 'MSCU1234567',
-    checkpointName: 'Terminal Gate',
-    location: 'ICD Terminal',
-    arrivedAt: '2024-01-20T14:00:00Z',
-    status: 'completed',
-    remarks: 'Gate-in completed',
-  },
-  {
-    id: '5',
-    containerId: '2',
-    containerNumber: 'HLCU7654321',
-    checkpointName: 'Factory Gate',
-    location: 'XYZ Foods, Hosur',
-    arrivedAt: '2024-01-21T06:00:00Z',
-    departedAt: '2024-01-21T06:30:00Z',
-    status: 'completed',
-    remarks: 'Loading completed',
-  },
-  {
-    id: '6',
-    containerId: '2',
-    containerNumber: 'HLCU7654321',
-    checkpointName: 'Toll Plaza - NH44',
-    location: 'Krishnagiri, Tamil Nadu',
-    arrivedAt: '2024-01-21T08:00:00Z',
-    status: 'in-transit',
-    remarks: 'En route to port',
-  },
-];
-
-const allTransitContainers = [
-  { 
-    id: '1', 
-    containerNumber: 'MSCU1234567', 
-    origin: 'Chennai Port', 
-    destination: 'ICD Terminal',
-    status: 'delivered' as const,
-    checkpoints: 4,
-    lastUpdate: '2024-01-20T14:00:00Z',
-    eta: '2024-01-20T14:00:00Z',
-  },
-  { 
-    id: '2', 
-    containerNumber: 'HLCU7654321', 
-    origin: 'XYZ Foods, Hosur', 
-    destination: 'Chennai Port',
-    status: 'in-transit' as const,
-    checkpoints: 2,
-    lastUpdate: '2024-01-21T08:00:00Z',
-    eta: '2024-01-21T12:00:00Z',
-  },
-  { 
-    id: '3', 
-    containerNumber: 'OOLU3210987', 
-    origin: 'ICD Terminal', 
-    destination: 'Chemical Corp, Manali',
-    status: 'pending' as const,
-    checkpoints: 0,
-    lastUpdate: null,
-    eta: '2024-01-22T10:00:00Z',
-  },
-];
 
 export default function TransitTracking() {
   const [selectedContainer, setSelectedContainer] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [showDetailsDialog, setShowDetailsDialog] = useState(false);
 
-  const myContainers = dummyContainers.filter(c => c.customer === 'ABC Manufacturing');
-  
-  const inTransitCount = allTransitContainers.filter(c => c.status === 'in-transit').length;
-  const deliveredCount = allTransitContainers.filter(c => c.status === 'delivered').length;
-  const pendingCount = allTransitContainers.filter(c => c.status === 'pending').length;
+  // Filter for this customer (ABC Manufacturing)
+  const myTransitContainers = dummyTransitContainers.filter(c => {
+    const container = dummyContainers.find(dc => dc.containerNumber === c.containerNumber);
+    return container?.customer === 'ABC Manufacturing';
+  });
 
-  const filteredContainers = statusFilter === 'all' 
-    ? allTransitContainers 
-    : allTransitContainers.filter(c => c.status === statusFilter);
+  const inTransitCount = myTransitContainers.filter(c => c.status === 'in-transit').length;
+  const deliveredCount = myTransitContainers.filter(c => c.status === 'delivered').length;
+  const pendingCount = myTransitContainers.filter(c => c.status === 'pending').length;
 
-  const selectedTransitData = selectedContainer 
+  const filteredContainers = statusFilter === 'all'
+    ? myTransitContainers
+    : myTransitContainers.filter(c => c.status === statusFilter);
+
+  const selectedTransitData = selectedContainer
     ? dummyTransitCheckpoints.filter(c => c.containerId === selectedContainer)
     : [];
 
-  const columns: Column<typeof allTransitContainers[0]>[] = [
+  const columns: Column<typeof myTransitContainers[0]>[] = [
     {
       key: 'containerNumber',
       header: 'Container No.',
@@ -227,7 +130,7 @@ export default function TransitTracking() {
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KPICard
           title="Total Shipments"
-          value={allTransitContainers.length}
+          value={myTransitContainers.length}
           icon={Container}
           variant="primary"
         />
@@ -286,7 +189,7 @@ export default function TransitTracking() {
               Transit Checkpoints
             </DialogTitle>
           </DialogHeader>
-          
+
           {selectedContainer && (
             <div className="space-y-6">
               {/* Container Info */}
@@ -294,17 +197,17 @@ export default function TransitTracking() {
                 <div>
                   <p className="text-sm text-muted-foreground">Container</p>
                   <p className="font-mono font-medium text-lg">
-                    {allTransitContainers.find(c => c.id === selectedContainer)?.containerNumber}
+                    {myTransitContainers.find(c => c.id === selectedContainer)?.containerNumber}
                   </p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-muted-foreground">Status</p>
                   <Badge variant={
-                    allTransitContainers.find(c => c.id === selectedContainer)?.status === 'delivered' 
-                      ? 'secondary' 
+                    myTransitContainers.find(c => c.id === selectedContainer)?.status === 'delivered'
+                      ? 'secondary'
                       : 'default'
                   }>
-                    {allTransitContainers.find(c => c.id === selectedContainer)?.status}
+                    {myTransitContainers.find(c => c.id === selectedContainer)?.status}
                   </Badge>
                 </div>
               </div>
@@ -312,17 +215,17 @@ export default function TransitTracking() {
               {/* Timeline */}
               <div className="relative">
                 <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-border" />
-                
+
                 {selectedTransitData.length > 0 ? (
                   <div className="space-y-6">
                     {selectedTransitData.map((checkpoint, index) => (
                       <div key={checkpoint.id} className="relative pl-10">
                         <div className={`absolute left-2 top-1 h-5 w-5 rounded-full border-2 flex items-center justify-center
-                          ${checkpoint.status === 'completed' 
-                            ? 'bg-primary border-primary' 
+                          ${checkpoint.status === 'completed'
+                            ? 'bg-primary border-primary'
                             : checkpoint.status === 'in-transit'
-                            ? 'bg-warning border-warning'
-                            : 'bg-background border-muted-foreground'
+                              ? 'bg-warning border-warning'
+                              : 'bg-background border-muted-foreground'
                           }`}
                         >
                           {checkpoint.status === 'completed' && (
@@ -347,7 +250,7 @@ export default function TransitTracking() {
                                 {checkpoint.status === 'completed' ? 'Passed' : 'Current'}
                               </Badge>
                             </div>
-                            
+
                             <div className="grid gap-2 sm:grid-cols-2 text-sm">
                               <div className="flex items-center gap-2">
                                 <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -360,7 +263,7 @@ export default function TransitTracking() {
                                 </div>
                               )}
                             </div>
-                            
+
                             {checkpoint.remarks && (
                               <p className="mt-2 text-sm text-muted-foreground border-t pt-2">
                                 {checkpoint.remarks}

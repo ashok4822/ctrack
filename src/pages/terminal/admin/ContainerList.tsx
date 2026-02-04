@@ -46,7 +46,7 @@ const columns: Column<Container>[] = [
     header: 'Location',
     render: (item) =>
       item.yardLocation
-        ? `${item.yardLocation.block}-${item.yardLocation.row}-${item.yardLocation.bay}-${item.yardLocation.tier}`
+        ? item.yardLocation.block
         : '-',
   },
   {

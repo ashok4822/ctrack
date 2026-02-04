@@ -17,10 +17,10 @@ import type { Container as ContainerType } from '@/types';
 
 export default function CustomerMyContainers() {
   const [selectedContainer, setSelectedContainer] = useState<ContainerType | null>(null);
-  
+
   // Filter containers for this customer
   const myContainers = dummyContainers.filter(c => c.customer === 'ABC Manufacturing');
-  
+
   const inYard = myContainers.filter(c => c.status === 'in-yard').length;
   const inTransit = myContainers.filter(c => c.status === 'in-transit').length;
   const atFactory = myContainers.filter(c => c.status === 'at-factory').length;
@@ -61,7 +61,7 @@ export default function CustomerMyContainers() {
       header: 'Location',
       render: (item) =>
         item.yardLocation
-          ? `${item.yardLocation.block}-${item.yardLocation.row}-${item.yardLocation.bay}-${item.yardLocation.tier}`
+          ? item.yardLocation.block
           : '-',
     },
     {
@@ -158,8 +158,7 @@ export default function CustomerMyContainers() {
                   <div className="col-span-2">
                     <p className="text-sm text-muted-foreground">Yard Location</p>
                     <p className="font-medium">
-                      Block {selectedContainer.yardLocation.block}, Row {selectedContainer.yardLocation.row}, 
-                      Bay {selectedContainer.yardLocation.bay}, Tier {selectedContainer.yardLocation.tier}
+                      Block {selectedContainer.yardLocation.block}
                     </p>
                   </div>
                 )}

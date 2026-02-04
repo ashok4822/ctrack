@@ -47,7 +47,7 @@ export default function OperatorEquipmentVehicles() {
   const [assignTaskOpen, setAssignTaskOpen] = useState(false);
   const [updateStatusOpen, setUpdateStatusOpen] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | null>(null);
-  
+
   // Vehicle Gate In/Out state
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [gateInOpen, setGateInOpen] = useState(false);
@@ -63,6 +63,14 @@ export default function OperatorEquipmentVehicles() {
     containerId: '',
     purpose: 'stuffing',
     remarks: '',
+  });
+
+  const [newVehicleGateInOpen, setNewVehicleGateInOpen] = useState(false);
+  const [newVehicleForm, setNewVehicleForm] = useState({
+    vehicleNumber: '',
+    driverName: '',
+    driverPhone: '',
+    type: 'truck' as Vehicle['type'],
   });
 
   const [taskForm, setTaskForm] = useState({
@@ -107,7 +115,7 @@ export default function OperatorEquipmentVehicles() {
       });
       return;
     }
-    
+
     toast({
       title: "Task Assigned",
       description: `Task assigned to ${selectedEquipment.name} for container ${taskForm.containerId}.`,
@@ -134,12 +142,12 @@ export default function OperatorEquipmentVehicles() {
       return;
     }
 
-    setEquipment(prev => prev.map(eq => 
-      eq.id === selectedEquipment.id 
+    setEquipment(prev => prev.map(eq =>
+      eq.id === selectedEquipment.id
         ? { ...eq, status: statusForm.status as Equipment['status'] }
         : eq
     ));
-    
+
     toast({
       title: "Status Updated",
       description: `${selectedEquipment.name} status updated to ${statusForm.status}.`,
@@ -189,8 +197,8 @@ export default function OperatorEquipmentVehicles() {
       return;
     }
 
-    const itemName = approvalType === 'vehicle' 
-      ? (approvalItem as Vehicle).vehicleNumber 
+    const itemName = approvalType === 'vehicle'
+      ? (approvalItem as Vehicle).vehicleNumber
       : (approvalItem as Equipment).name;
 
     toast({
@@ -211,8 +219,8 @@ export default function OperatorEquipmentVehicles() {
       return;
     }
 
-    setVehicles(prev => prev.map(v => 
-      v.id === selectedVehicle.id 
+    setVehicles(prev => prev.map(v =>
+      v.id === selectedVehicle.id
         ? { ...v, status: 'active' as const, currentLocation: 'Terminal - Stuffing Area' }
         : v
     ));
@@ -235,8 +243,8 @@ export default function OperatorEquipmentVehicles() {
       return;
     }
 
-    setVehicles(prev => prev.map(v => 
-      v.id === selectedVehicle.id 
+    setVehicles(prev => prev.map(v =>
+      v.id === selectedVehicle.id
         ? { ...v, status: 'inactive' as const, currentLocation: 'Exited Terminal' }
         : v
     ));
@@ -247,6 +255,38 @@ export default function OperatorEquipmentVehicles() {
     });
     setGateOutOpen(false);
     setSelectedVehicle(null);
+  };
+
+  const handleNewVehicleGateIn = () => {
+    if (!newVehicleForm.vehicleNumber || !newVehicleForm.driverName || !newVehicleForm.driverPhone) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newVehicle: Vehicle = {
+      id: Math.random().toString(36).substr(2, 9),
+      ...newVehicleForm,
+      status: 'active',
+      currentLocation: 'Gate A',
+    };
+
+    setVehicles(prev => [newVehicle, ...prev]);
+
+    toast({
+      title: "Vehicle Gate-In Successful",
+      description: `${newVehicle.vehicleNumber} has entered the terminal.`,
+    });
+    setNewVehicleGateInOpen(false);
+    setNewVehicleForm({
+      vehicleNumber: '',
+      driverName: '',
+      driverPhone: '',
+      type: 'truck',
+    });
   };
   const vehicleColumns: Column<Vehicle>[] = [
     { key: 'vehicleNumber', header: 'Vehicle No.', sortable: true },
@@ -398,6 +438,12 @@ export default function OperatorEquipmentVehicles() {
             </TabsList>
 
             <TabsContent value="vehicles">
+              <div className="flex justify-end mb-4">
+                <Button onClick={() => setNewVehicleGateInOpen(true)}>
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Vehicle Gate-In
+                </Button>
+              </div>
               <DataTable
                 data={vehicles}
                 columns={vehicleColumns}
@@ -445,7 +491,7 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Container ID *</Label>
-              <Input 
+              <Input
                 placeholder="e.g., MSKU1234567"
                 value={taskForm.containerId}
                 onChange={(e) => setTaskForm(prev => ({ ...prev, containerId: e.target.value }))}
@@ -455,7 +501,7 @@ export default function OperatorEquipmentVehicles() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>From Location</Label>
-                <Input 
+                <Input
                   placeholder="e.g., A-01-02-3"
                   value={taskForm.fromLocation}
                   onChange={(e) => setTaskForm(prev => ({ ...prev, fromLocation: e.target.value }))}
@@ -463,7 +509,7 @@ export default function OperatorEquipmentVehicles() {
               </div>
               <div className="space-y-2">
                 <Label>To Location</Label>
-                <Input 
+                <Input
                   placeholder="e.g., B-02-05-1"
                   value={taskForm.toLocation}
                   onChange={(e) => setTaskForm(prev => ({ ...prev, toLocation: e.target.value }))}
@@ -488,7 +534,7 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Notes</Label>
-              <Textarea 
+              <Textarea
                 placeholder="Additional instructions..."
                 value={taskForm.notes}
                 onChange={(e) => setTaskForm(prev => ({ ...prev, notes: e.target.value }))}
@@ -530,7 +576,7 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Notes</Label>
-              <Textarea 
+              <Textarea
                 placeholder="Reason for status change..."
                 value={statusForm.notes}
                 onChange={(e) => setStatusForm(prev => ({ ...prev, notes: e.target.value }))}
@@ -559,8 +605,8 @@ export default function OperatorEquipmentVehicles() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>Operation Type *</Label>
-              <Select 
-                value={gateInForm.operationType} 
+              <Select
+                value={gateInForm.operationType}
                 onValueChange={(v) => setGateInForm(prev => ({ ...prev, operationType: v }))}
               >
                 <SelectTrigger>
@@ -575,8 +621,8 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Container ID *</Label>
-              <Select 
-                value={gateInForm.containerId} 
+              <Select
+                value={gateInForm.containerId}
                 onValueChange={(v) => setGateInForm(prev => ({ ...prev, containerId: v }))}
               >
                 <SelectTrigger>
@@ -592,7 +638,7 @@ export default function OperatorEquipmentVehicles() {
                 </SelectContent>
               </Select>
               {gateInForm.containerId === 'manual' && (
-                <Input 
+                <Input
                   placeholder="Enter container ID"
                   className="mt-2"
                   onChange={(e) => setGateInForm(prev => ({ ...prev, containerId: e.target.value }))}
@@ -602,8 +648,8 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Purpose</Label>
-              <Select 
-                value={gateInForm.purpose} 
+              <Select
+                value={gateInForm.purpose}
                 onValueChange={(v) => setGateInForm(prev => ({ ...prev, purpose: v }))}
               >
                 <SelectTrigger>
@@ -620,7 +666,7 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Remarks</Label>
-              <Textarea 
+              <Textarea
                 placeholder="Any additional notes..."
                 value={gateInForm.remarks}
                 onChange={(e) => setGateInForm(prev => ({ ...prev, remarks: e.target.value }))}
@@ -652,8 +698,8 @@ export default function OperatorEquipmentVehicles() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>Operation Completed *</Label>
-              <Select 
-                value={gateOutForm.operationType} 
+              <Select
+                value={gateOutForm.operationType}
                 onValueChange={(v) => setGateOutForm(prev => ({ ...prev, operationType: v }))}
               >
                 <SelectTrigger>
@@ -668,8 +714,8 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Container ID *</Label>
-              <Select 
-                value={gateOutForm.containerId} 
+              <Select
+                value={gateOutForm.containerId}
                 onValueChange={(v) => setGateOutForm(prev => ({ ...prev, containerId: v }))}
               >
                 <SelectTrigger>
@@ -685,7 +731,7 @@ export default function OperatorEquipmentVehicles() {
                 </SelectContent>
               </Select>
               {gateOutForm.containerId === 'manual' && (
-                <Input 
+                <Input
                   placeholder="Enter container ID"
                   className="mt-2"
                   onChange={(e) => setGateOutForm(prev => ({ ...prev, containerId: e.target.value }))}
@@ -695,8 +741,8 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Exit Purpose</Label>
-              <Select 
-                value={gateOutForm.purpose} 
+              <Select
+                value={gateOutForm.purpose}
                 onValueChange={(v) => setGateOutForm(prev => ({ ...prev, purpose: v }))}
               >
                 <SelectTrigger>
@@ -713,7 +759,7 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Remarks</Label>
-              <Textarea 
+              <Textarea
                 placeholder="Any additional notes..."
                 value={gateOutForm.remarks}
                 onChange={(e) => setGateOutForm(prev => ({ ...prev, remarks: e.target.value }))}
@@ -736,8 +782,8 @@ export default function OperatorEquipmentVehicles() {
           <DialogHeader>
             <DialogTitle>Request Manager Approval</DialogTitle>
             <DialogDescription>
-              {approvalType === 'vehicle' 
-                ? (approvalItem as Vehicle)?.vehicleNumber 
+              {approvalType === 'vehicle'
+                ? (approvalItem as Vehicle)?.vehicleNumber
                 : (approvalItem as Equipment)?.name} - {approvalType}
             </DialogDescription>
           </DialogHeader>
@@ -789,7 +835,7 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Reason *</Label>
-              <Textarea 
+              <Textarea
                 placeholder="Explain why approval is needed..."
                 value={approvalForm.reason}
                 onChange={(e) => setApprovalForm(prev => ({ ...prev, reason: e.target.value }))}
@@ -798,7 +844,7 @@ export default function OperatorEquipmentVehicles() {
 
             <div className="space-y-2">
               <Label>Additional Remarks</Label>
-              <Textarea 
+              <Textarea
                 placeholder="Any additional information..."
                 value={approvalForm.remarks}
                 onChange={(e) => setApprovalForm(prev => ({ ...prev, remarks: e.target.value }))}
@@ -811,6 +857,69 @@ export default function OperatorEquipmentVehicles() {
               <Send className="h-4 w-4 mr-2" />
               Submit Request
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      {/* New Vehicle Gate-In Dialog */}
+      <Dialog open={newVehicleGateInOpen} onOpenChange={setNewVehicleGateInOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <LogIn className="h-5 w-5 text-success" />
+              Vehicle Gate-In
+            </DialogTitle>
+            <DialogDescription>
+              Enter vehicle and driver details to process gate-in.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-vehicle-number">Vehicle Number *</Label>
+              <Input
+                id="new-vehicle-number"
+                placeholder="e.g., TN-01-AB-1234"
+                value={newVehicleForm.vehicleNumber}
+                onChange={(e) => setNewVehicleForm(prev => ({ ...prev, vehicleNumber: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-driver-name">Driver Name *</Label>
+              <Input
+                id="new-driver-name"
+                placeholder="Enter driver name"
+                value={newVehicleForm.driverName}
+                onChange={(e) => setNewVehicleForm(prev => ({ ...prev, driverName: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-driver-phone">Driver Mobile Number *</Label>
+              <Input
+                id="new-driver-phone"
+                placeholder="e.g., +91 98765 43210"
+                value={newVehicleForm.driverPhone}
+                onChange={(e) => setNewVehicleForm(prev => ({ ...prev, driverPhone: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-vehicle-type">Vehicle Type *</Label>
+              <Select
+                value={newVehicleForm.type}
+                onValueChange={(v) => setNewVehicleForm(prev => ({ ...prev, type: v as any }))}
+              >
+                <SelectTrigger id="new-vehicle-type">
+                  <SelectValue placeholder="Select vehicle type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="truck">Truck</SelectItem>
+                  <SelectItem value="trailer">Trailer</SelectItem>
+                  <SelectItem value="chassis">Chassis</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setNewVehicleGateInOpen(false)}>Cancel</Button>
+            <Button onClick={handleNewVehicleGateIn}>Confirm Gate-In</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

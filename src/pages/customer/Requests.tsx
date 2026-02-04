@@ -21,8 +21,8 @@ import { useState } from 'react';
 
 export default function CustomerRequests() {
   const [selectedRequest, setSelectedRequest] = useState<ContainerRequest | null>(null);
-  
-  const requests = dummyCustomerRequests;
+
+  const requests = dummyCustomerRequests.filter(r => r.customerName === 'ABC Manufacturing');
 
   const pendingRequests = requests.filter(r => r.status === 'pending').length;
   const approvedRequests = requests.filter(r => r.status === 'approved').length;
@@ -122,7 +122,7 @@ export default function CustomerRequests() {
   return (
     <DashboardLayout
       navItems={customerNavItems}
-      pageTitle="Requests Listing"
+      pageTitle="Container Requests Listing"
     >
       {/* KPI Cards */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -159,7 +159,7 @@ export default function CustomerRequests() {
       {/* Requests Table */}
       <Card>
         <CardHeader>
-          <CardTitle>All Service Requests</CardTitle>
+          <CardTitle>My Container Requests</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="all">
@@ -169,7 +169,7 @@ export default function CustomerRequests() {
               <TabsTrigger value="approved">Approved ({approvedRequests})</TabsTrigger>
               <TabsTrigger value="in-progress">In Progress ({inProgressRequests})</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="all">
               <DataTable
                 data={requests}
@@ -180,7 +180,7 @@ export default function CustomerRequests() {
                 emptyMessage="No requests found"
               />
             </TabsContent>
-            
+
             <TabsContent value="pending">
               <DataTable
                 data={requests.filter(r => r.status === 'pending')}
@@ -189,7 +189,7 @@ export default function CustomerRequests() {
                 emptyMessage="No pending requests"
               />
             </TabsContent>
-            
+
             <TabsContent value="approved">
               <DataTable
                 data={requests.filter(r => r.status === 'approved')}
@@ -198,7 +198,7 @@ export default function CustomerRequests() {
                 emptyMessage="No approved requests"
               />
             </TabsContent>
-            
+
             <TabsContent value="in-progress">
               <DataTable
                 data={requests.filter(r => r.status === 'in-progress')}
@@ -239,7 +239,7 @@ export default function CustomerRequests() {
                   <p className="font-medium">{new Date(selectedRequest.preferredDate).toLocaleDateString()}</p>
                 </div>
               </div>
-              
+
               <div className="border-t pt-4">
                 <h4 className="font-semibold mb-3">Cargo Details</h4>
                 <div className="grid grid-cols-2 gap-4">

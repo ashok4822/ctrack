@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import LandingPage from "./pages/LandingPage";
 import TerminalLogin from "./pages/terminal/TerminalLogin";
 import CustomerLogin from "./pages/customer/CustomerLogin";
+import CustomerSignup from "./pages/customer/CustomerSignup";
 
 // Admin Pages
 import AdminLogin from "./pages/terminal/admin/AdminLogin";
@@ -22,11 +23,11 @@ import VehiclesEquipment from "./pages/terminal/admin/VehiclesEquipment";
 import AuditLogs from "./pages/terminal/admin/AuditLogs";
 import UserManagement from "./pages/terminal/admin/UserManagement";
 import AdminStuffingDestuffing from "./pages/terminal/admin/StuffingDestuffing";
-import SurveysDamage from "./pages/terminal/admin/SurveysDamage";
 import ActivitiesCharges from "./pages/terminal/admin/ActivitiesCharges";
 import ReportsAnalytics from "./pages/terminal/admin/ReportsAnalytics";
 import SystemConfiguration from "./pages/terminal/admin/SystemConfiguration";
 import AdminProfile from "./pages/terminal/admin/Profile";
+import AdminTransitTracking from "./pages/terminal/admin/TransitTracking";
 
 // Operator Pages (formerly Terminal Operator)
 import OperatorDashboard from "./pages/terminal/operator/OperatorDashboard";
@@ -40,6 +41,7 @@ import OperatorBilling from "./pages/terminal/operator/Billing";
 import OperatorPDAView from "./pages/terminal/operator/PDAView";
 import OperatorProfile from "./pages/terminal/operator/Profile";
 import OperatorCargoRequests from "./pages/terminal/operator/CargoRequests";
+import OperatorTransitTracking from "./pages/terminal/operator/TransitTracking";
 
 // Customer Pages
 import CustomerDashboard from "./pages/customer/CustomerDashboard";
@@ -84,11 +86,11 @@ const App = () => (
             <Route path="/admin/audit" element={<AuditLogs />} />
             <Route path="/admin/users" element={<UserManagement />} />
             <Route path="/admin/stuffing" element={<AdminStuffingDestuffing />} />
-            <Route path="/admin/surveys" element={<SurveysDamage />} />
             <Route path="/admin/charges" element={<ActivitiesCharges />} />
             <Route path="/admin/reports" element={<ReportsAnalytics />} />
             <Route path="/admin/settings" element={<SystemConfiguration />} />
             <Route path="/admin/profile" element={<AdminProfile />} />
+            <Route path="/admin/transit" element={<AdminTransitTracking />} />
 
             {/* Operator Routes */}
             <Route path="/operator/dashboard" element={<OperatorDashboard />} />
@@ -102,9 +104,11 @@ const App = () => (
             <Route path="/operator/pda" element={<OperatorPDAView />} />
             <Route path="/operator/profile" element={<OperatorProfile />} />
             <Route path="/operator/cargo-requests" element={<OperatorCargoRequests />} />
+            <Route path="/operator/transit" element={<OperatorTransitTracking />} />
 
             {/* Customer Routes */}
             <Route path="/customer/login" element={<CustomerLogin />} />
+            <Route path="/customer/signup" element={<CustomerSignup />} />
             <Route path="/customer/dashboard" element={<CustomerDashboard />} />
             <Route path="/customer/containers" element={<CustomerMyContainers />} />
             <Route path="/customer/request-container" element={<CustomerRequestContainer />} />

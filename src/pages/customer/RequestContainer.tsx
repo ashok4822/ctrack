@@ -34,7 +34,7 @@ export default function RequestContainer() {
   const { toast } = useToast();
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [requestType, setRequestType] = useState<'stuffing' | 'destuffing'>('stuffing');
-  
+
   // Stuffing form state
   const [stuffingForm, setStuffingForm] = useState({
     containerSize: '',
@@ -362,10 +362,7 @@ export default function RequestContainer() {
                         <div>
                           <p className="text-sm text-muted-foreground">Yard Location</p>
                           <p className="font-medium">
-                            Block {selectedContainerDetails.yardLocation.block}, 
-                            Row {selectedContainerDetails.yardLocation.row}, 
-                            Bay {selectedContainerDetails.yardLocation.bay}, 
-                            Tier {selectedContainerDetails.yardLocation.tier}
+                            Block {selectedContainerDetails.yardLocation.block}
                           </p>
                         </div>
                       )}
@@ -420,7 +417,7 @@ export default function RequestContainer() {
             <DialogTitle>Request Submitted!</DialogTitle>
           </DialogHeader>
           <p className="text-muted-foreground">
-            Your {requestType === 'stuffing' ? 'empty container' : 'destuffing'} request has been submitted successfully. 
+            Your {requestType === 'stuffing' ? 'empty container' : 'destuffing'} request has been submitted successfully.
             You will receive a notification once it's processed.
           </p>
           <DialogFooter className="sm:justify-center">

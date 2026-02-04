@@ -41,7 +41,7 @@ export default function OperatorGateOperations() {
   const [hasDamage, setHasDamage] = useState(false);
   const [requiresApproval, setRequiresApproval] = useState(false);
   const [approvalReason, setApprovalReason] = useState('');
-  
+
   const gateIns = dummyGateOperations.filter(op => op.type === 'gate-in');
   const gateOuts = dummyGateOperations.filter(op => op.type === 'gate-out');
   const pending = dummyGateOperations.filter(op => op.status === 'pending');
@@ -85,8 +85,8 @@ export default function OperatorGateOperations() {
       render: (item) => (
         <Dialog>
           <DialogTrigger asChild>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               variant="outline"
               onClick={() => setSelectedOperation(item)}
             >
@@ -139,7 +139,7 @@ export default function OperatorGateOperations() {
   ];
 
   return (
-    <DashboardLayout navItems={operatorNavItems} pageTitle="Gate Operations">
+    <DashboardLayout navItems={operatorNavItems} pageTitle="Container Gate Operations">
       {/* KPI Cards */}
       <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KPICard
@@ -277,16 +277,16 @@ export default function OperatorGateOperations() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center space-x-2 pt-6">
-                  <Checkbox 
-                    id="loaded" 
+                  <Checkbox
+                    id="loaded"
                     checked={isLoaded}
                     onCheckedChange={(checked) => setIsLoaded(checked === true)}
                   />
                   <Label htmlFor="loaded" className="cursor-pointer">Loaded Container</Label>
                 </div>
                 <div className="flex items-center space-x-2 pt-6">
-                  <Checkbox 
-                    id="damage" 
+                  <Checkbox
+                    id="damage"
                     checked={hasDamage}
                     onCheckedChange={(checked) => setHasDamage(checked === true)}
                   />
@@ -305,8 +305,8 @@ export default function OperatorGateOperations() {
               </div>
               <div className="space-y-3 pt-2 border-t">
                 <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="requireApproval" 
+                  <Checkbox
+                    id="requireApproval"
                     checked={requiresApproval}
                     onCheckedChange={(checked) => setRequiresApproval(checked === true)}
                   />
@@ -318,8 +318,8 @@ export default function OperatorGateOperations() {
                 {requiresApproval && (
                   <div className="space-y-2 pl-6">
                     <Label htmlFor="approvalReason">Reason for Approval *</Label>
-                    <Textarea 
-                      id="approvalReason" 
+                    <Textarea
+                      id="approvalReason"
                       placeholder="Explain why manager approval is needed..."
                       value={approvalReason}
                       onChange={(e) => setApprovalReason(e.target.value)}
@@ -343,7 +343,7 @@ export default function OperatorGateOperations() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-        
+
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline">
@@ -399,7 +399,7 @@ export default function OperatorGateOperations() {
       {/* Gate Operations Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Gate Operations</CardTitle>
+          <CardTitle>Container Gate Operations</CardTitle>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="all">

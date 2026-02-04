@@ -98,12 +98,12 @@ export default function OperatorDashboard() {
       prev.map((n) =>
         n.id === nomination.id
           ? {
-              ...n,
-              status: "rejected",
-              rejectedAt: new Date().toISOString(),
-              rejectedBy: "Mike Operator",
-              rejectionReason,
-            }
+            ...n,
+            status: "rejected",
+            rejectedAt: new Date().toISOString(),
+            rejectedBy: "Mike Operator",
+            rejectionReason,
+          }
           : n,
       ),
     );
@@ -130,7 +130,7 @@ export default function OperatorDashboard() {
           variant="primary"
         />
         <KPICard title="Tasks Pending" value={dummyKPIData.tasksToday || 0} icon={CheckSquare} variant="warning" />
-        <KPICard title="Nominations Pending" value={pendingNominations.length} icon={FileCheck} variant="primary" />
+        {/* <KPICard title="Nominations Pending" value={pendingNominations.length} icon={FileCheck} variant="primary" /> */}
       </div>
 
       {/* Quick Actions */}
@@ -160,8 +160,8 @@ export default function OperatorDashboard() {
           </Link>
         </Button>
       </div>
-
-      {/* Nominated Containers Section */}
+      {/* 
+      Nominated Containers Section
       <Card className="mb-6">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
@@ -237,7 +237,6 @@ export default function OperatorDashboard() {
                       </DialogHeader>
                       {selectedNomination && (
                         <div className="space-y-4">
-                          {/* Container Info */}
                           <div className="rounded-lg border p-4 bg-muted/30">
                             <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
                               <Package className="h-4 w-4" />
@@ -265,7 +264,6 @@ export default function OperatorDashboard() {
                             </div>
                           </div>
 
-                          {/* Destination Info */}
                           <div className="rounded-lg border p-4 bg-muted/30">
                             <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
                               <MapPin className="h-4 w-4" />
@@ -291,7 +289,6 @@ export default function OperatorDashboard() {
                             </div>
                           </div>
 
-                          {/* Truck Info */}
                           <div className="rounded-lg border p-4 bg-muted/30">
                             <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
                               <Truck className="h-4 w-4" />
@@ -316,7 +313,6 @@ export default function OperatorDashboard() {
                             </div>
                           </div>
 
-                          {/* Rejection Reason */}
                           <div>
                             <Label htmlFor="rejection-reason">Rejection Reason (if rejecting)</Label>
                             <Textarea
@@ -352,7 +348,8 @@ export default function OperatorDashboard() {
             </div>
           )}
         </CardContent>
-      </Card>
+      </Card> 
+      */}
 
       {/* Task Queue and Gate Operations */}
       <div className="grid gap-6 lg:grid-cols-1">
@@ -396,7 +393,7 @@ export default function OperatorDashboard() {
         {/* Pending Gate Operations */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-base font-semibold">Pending Gate Operations</CardTitle>
+            <CardTitle className="text-base font-semibold">Pending Container Gate Operations</CardTitle>
             <Button variant="ghost" size="sm" asChild>
               <Link to="/operator/gate">
                 View All <ArrowRight className="ml-2 h-4 w-4" />

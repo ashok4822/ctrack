@@ -19,28 +19,22 @@ export default function YardConfiguration() {
   const [selectedBlock, setSelectedBlock] = useState<YardBlock | null>(null);
   const [configForm, setConfigForm] = useState({
     name: '',
-    rows: 0,
-    bays: 0,
-    tiers: 0,
+    capacity: 0,
   });
 
   const handleOpenConfig = (block: YardBlock) => {
     setSelectedBlock(block);
     setConfigForm({
       name: block.name,
-      rows: block.rows,
-      bays: block.bays,
-      tiers: block.tiers,
+      capacity: block.capacity,
     });
     setConfigDialogOpen(true);
   };
-
   const handleSaveConfig = () => {
     if (!selectedBlock) return;
-    const newCapacity = configForm.rows * configForm.bays * configForm.tiers;
-    setBlocks(blocks.map(b => 
-      b.id === selectedBlock.id 
-        ? { ...b, ...configForm, capacity: newCapacity }
+    setBlocks(blocks.map(b =>
+      b.id === selectedBlock.id
+        ? { ...b, ...configForm }
         : b
     ));
     toast({
@@ -50,21 +44,6 @@ export default function YardConfiguration() {
     setConfigDialogOpen(false);
   };
 
-  const handleViewMap = (block: YardBlock) => {
-    setSelectedBlock(block);
-    setMapDialogOpen(true);
-  };
-
-  const generateSlotGrid = (block: YardBlock) => {
-    const slots = [];
-    for (let row = 1; row <= Math.min(block.rows, 6); row++) {
-      for (let bay = 1; bay <= Math.min(block.bays, 8); bay++) {
-        const isOccupied = Math.random() < (block.occupied / block.capacity);
-        slots.push({ row, bay, isOccupied });
-      }
-    }
-    return slots;
-  };
 
   return (
     <DashboardLayout
@@ -133,7 +112,7 @@ export default function YardConfiguration() {
                   {Math.round(
                     (dummyYardBlocks.reduce((acc, b) => acc + b.occupied, 0) /
                       dummyYardBlocks.reduce((acc, b) => acc + b.capacity, 0)) *
-                      100
+                    100
                   )}%
                 </p>
                 <p className="text-sm text-muted-foreground">Utilization</p>
@@ -162,47 +141,33 @@ export default function YardConfiguration() {
                     <div className="flex items-center justify-between mb-2">
                       <span className="text-sm text-muted-foreground">Utilization</span>
                       <span
-                        className={`text-sm font-medium ${
-                          percentage > 80
-                            ? 'text-destructive'
-                            : percentage > 60
+                        className={`text-sm font-medium ${percentage > 80
+                          ? 'text-destructive'
+                          : percentage > 60
                             ? 'text-warning'
                             : 'text-success'
-                        }`}
+                          }`}
                       >
                         {percentage}%
                       </span>
                     </div>
                     <div className="h-3 rounded-full bg-muted overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all ${
-                          percentage > 80
-                            ? 'bg-destructive'
-                            : percentage > 60
+                        className={`h-full rounded-full transition-all ${percentage > 80
+                          ? 'bg-destructive'
+                          : percentage > 60
                             ? 'bg-warning'
                             : 'bg-success'
-                        }`}
+                          }`}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
                   </div>
 
                   {/* Block Details */}
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="grid grid-cols-1 gap-4 text-sm">
                     <div>
-                      <p className="text-muted-foreground">Rows</p>
-                      <p className="font-medium text-foreground">{block.rows}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Bays</p>
-                      <p className="font-medium text-foreground">{block.bays}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Tiers</p>
-                      <p className="font-medium text-foreground">{block.tiers}</p>
-                    </div>
-                    <div>
-                      <p className="text-muted-foreground">Capacity</p>
+                      <p className="text-muted-foreground">Total Capacity</p>
                       <p className="font-medium text-foreground">{block.capacity}</p>
                     </div>
                   </div>
@@ -212,9 +177,6 @@ export default function YardConfiguration() {
                     <span className="text-sm text-muted-foreground">
                       {block.occupied} / {block.capacity} slots used
                     </span>
-                    <Button variant="outline" size="sm" onClick={() => handleViewMap(block)}>
-                      View Map
-                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -241,44 +203,15 @@ export default function YardConfiguration() {
                 onChange={(e) => setConfigForm({ ...configForm, name: e.target.value })}
               />
             </div>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="rows">Rows</Label>
-                <Input
-                  id="rows"
-                  type="number"
-                  min={1}
-                  value={configForm.rows}
-                  onChange={(e) => setConfigForm({ ...configForm, rows: parseInt(e.target.value) || 0 })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="bays">Bays</Label>
-                <Input
-                  id="bays"
-                  type="number"
-                  min={1}
-                  value={configForm.bays}
-                  onChange={(e) => setConfigForm({ ...configForm, bays: parseInt(e.target.value) || 0 })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="tiers">Tiers</Label>
-                <Input
-                  id="tiers"
-                  type="number"
-                  min={1}
-                  value={configForm.tiers}
-                  onChange={(e) => setConfigForm({ ...configForm, tiers: parseInt(e.target.value) || 0 })}
-                />
-              </div>
-            </div>
-            <div className="p-3 bg-muted rounded-lg">
-              <p className="text-sm text-muted-foreground">
-                Calculated Capacity: <span className="font-medium text-foreground">
-                  {configForm.rows * configForm.bays * configForm.tiers} slots
-                </span>
-              </p>
+            <div className="space-y-2">
+              <Label htmlFor="capacity">Capacity (Total Containers)</Label>
+              <Input
+                id="capacity"
+                type="number"
+                min={1}
+                value={configForm.capacity}
+                onChange={(e) => setConfigForm({ ...configForm, capacity: parseInt(e.target.value) || 0 })}
+              />
             </div>
           </div>
           <DialogFooter>
@@ -288,54 +221,6 @@ export default function YardConfiguration() {
         </DialogContent>
       </Dialog>
 
-      {/* View Map Dialog */}
-      <Dialog open={mapDialogOpen} onOpenChange={setMapDialogOpen}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Grid3X3 className="h-5 w-5" />
-              Block Map: {selectedBlock?.name}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="py-4">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-success" />
-                <span className="text-sm text-muted-foreground">Available</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded bg-destructive" />
-                <span className="text-sm text-muted-foreground">Occupied</span>
-              </div>
-            </div>
-            {selectedBlock && (
-              <div className="border rounded-lg p-4 bg-muted/30">
-                <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${Math.min(selectedBlock.bays, 8)}, minmax(0, 1fr))` }}>
-                  {generateSlotGrid(selectedBlock).map((slot, idx) => (
-                    <div
-                      key={idx}
-                      className={`aspect-square rounded flex items-center justify-center text-xs font-medium ${
-                        slot.isOccupied 
-                          ? 'bg-destructive/80 text-destructive-foreground' 
-                          : 'bg-success/80 text-success-foreground'
-                      }`}
-                      title={`Row ${slot.row}, Bay ${slot.bay}`}
-                    >
-                      <Box className="h-3 w-3" />
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 text-center text-sm text-muted-foreground">
-                  Showing {Math.min(selectedBlock.rows, 6)} rows × {Math.min(selectedBlock.bays, 8)} bays (sample view)
-                </div>
-              </div>
-            )}
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setMapDialogOpen(false)}>Close</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </DashboardLayout>
   );
 }
