@@ -23,20 +23,21 @@ export default function CustomerDashboard() {
   const inYard = myContainers.filter(c => c.status === 'in-yard').length;
   const inTransit = myContainers.filter(c => c.status === 'in-transit').length;
   const atFactory = myContainers.filter(c => c.status === 'at-factory').length;
-  const pendingRequests = dummyCustomerRequests.filter(r => r.status === 'pending').length;
+  const myRequests = dummyCustomerRequests.filter(r => r.customerName === 'ABC Manufacturing');
+  const pendingRequests = myRequests.filter(r => r.status === 'pending').length;
 
   return (
     <DashboardLayout
       navItems={customerNavItems}
       pageTitle="Customer Dashboard"
-      pageActions={
-        <Button asChild className="gap-2">
-          <Link to="/customer/stuffing">
-            <Plus className="h-4 w-4" />
-            New Request
-          </Link>
-        </Button>
-      }
+    // pageActions={
+    //   <Button asChild className="gap-2">
+    //     <Link to="/customer/stuffing">
+    //       <Plus className="h-4 w-4" />
+    //       New Request
+    //     </Link>
+    //   </Button>
+    // }
     >
       {/* Organization Info */}
       <div className="mb-6 rounded-lg border bg-success/5 p-4">
@@ -167,7 +168,7 @@ export default function CustomerDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {dummyCustomerRequests.map((request) => (
+            {myRequests.slice(0, 5).map((request) => (
               <div
                 key={request.id}
                 className="flex items-center gap-4 rounded-lg border p-3 hover:bg-muted/50 transition-colors"

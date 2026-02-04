@@ -13,12 +13,12 @@ export interface User {
 }
 
 // Container Types
-export type ContainerStatus = 
-  | 'in-yard' 
-  | 'in-transit' 
-  | 'at-port' 
-  | 'at-factory' 
-  | 'damaged' 
+export type ContainerStatus =
+  | 'in-yard'
+  | 'in-transit'
+  | 'at-port'
+  | 'at-factory'
+  | 'damaged'
   | 'pending'
   | 'gate-in'
   | 'gate-out';
@@ -48,9 +48,6 @@ export interface Container {
 
 export interface YardLocation {
   block: string;
-  row: string;
-  bay: string;
-  tier: string;
 }
 
 // Yard Types
@@ -59,9 +56,6 @@ export interface YardBlock {
   name: string;
   capacity: number;
   occupied: number;
-  rows: number;
-  bays: number;
-  tiers: number;
 }
 
 export interface Yard {

@@ -86,7 +86,7 @@ export default function ContainerDetails() {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      
+
       setContainer({ ...container, ...editData } as Container);
       setIsEditing(false);
       toast({
@@ -418,22 +418,10 @@ export default function ContainerDetails() {
             </CardHeader>
             <CardContent>
               {container.yardLocation ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div className="p-4 bg-muted rounded-lg text-center">
                     <p className="text-sm text-muted-foreground">Block</p>
                     <p className="text-2xl font-bold">{container.yardLocation.block}</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg text-center">
-                    <p className="text-sm text-muted-foreground">Row</p>
-                    <p className="text-2xl font-bold">{container.yardLocation.row}</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg text-center">
-                    <p className="text-sm text-muted-foreground">Bay</p>
-                    <p className="text-2xl font-bold">{container.yardLocation.bay}</p>
-                  </div>
-                  <div className="p-4 bg-muted rounded-lg text-center">
-                    <p className="text-sm text-muted-foreground">Tier</p>
-                    <p className="text-2xl font-bold">{container.yardLocation.tier}</p>
                   </div>
                 </div>
               ) : (

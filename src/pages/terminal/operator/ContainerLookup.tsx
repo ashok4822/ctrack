@@ -28,13 +28,13 @@ export default function OperatorContainerLookup() {
 
   const handleSearch = () => {
     if (!searchQuery.trim()) return;
-    
-    const results = dummyContainers.filter(c => 
+
+    const results = dummyContainers.filter(c =>
       c.containerNumber.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setSearchResults(results);
     setHasSearched(true);
-    
+
     if (results.length === 1) {
       setSelectedContainer(results[0]);
     } else {
@@ -186,7 +186,7 @@ export default function OperatorContainerLookup() {
                 <Label className="text-muted-foreground">Current Yard Location</Label>
                 {selectedContainer.yardLocation ? (
                   <p className="text-xl font-bold mt-1">
-                    {selectedContainer.yardLocation.block}-{selectedContainer.yardLocation.row}-{selectedContainer.yardLocation.bay}-{selectedContainer.yardLocation.tier}
+                    {selectedContainer.yardLocation.block}
                   </p>
                 ) : (
                   <p className="text-xl font-bold mt-1 text-muted-foreground">Not in Yard</p>
@@ -199,8 +199,8 @@ export default function OperatorContainerLookup() {
                   <div>
                     <Label className="text-muted-foreground">Gate-In Time</Label>
                     <p className="font-medium">
-                      {selectedContainer.gateInTime 
-                        ? new Date(selectedContainer.gateInTime).toLocaleString() 
+                      {selectedContainer.gateInTime
+                        ? new Date(selectedContainer.gateInTime).toLocaleString()
                         : 'N/A'}
                     </p>
                   </div>
@@ -210,8 +210,8 @@ export default function OperatorContainerLookup() {
                   <div>
                     <Label className="text-muted-foreground">Gate-Out Time</Label>
                     <p className="font-medium">
-                      {selectedContainer.gateOutTime 
-                        ? new Date(selectedContainer.gateOutTime).toLocaleString() 
+                      {selectedContainer.gateOutTime
+                        ? new Date(selectedContainer.gateOutTime).toLocaleString()
                         : 'N/A'}
                     </p>
                   </div>
